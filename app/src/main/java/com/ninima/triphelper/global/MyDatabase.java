@@ -14,7 +14,7 @@ public abstract class MyDatabase extends RoomDatabase {
     private final static String DB_NAME = "Trip_Helper_DB";
 
     static void initDatabase(Context context){
-        instance = Room.databaseBuilder(context, MyDatabase.class, DB_NAME).allowMainThreadQueries().build();
+        instance = Room.databaseBuilder(context, MyDatabase.class, DB_NAME).build();
     }
 
     public static MyDatabase instance(){

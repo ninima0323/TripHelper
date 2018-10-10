@@ -1,5 +1,6 @@
 package com.ninima.triphelper;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -10,5 +11,5 @@ public interface TripDao {
     public void insert(Trip trip);
 
     @Query("SELECT * FROM Trip ORDER BY registerTime DESC LIMIT 1")
-    public Trip getOne();
+    public LiveData<Trip> getOne();
 }
