@@ -1,4 +1,4 @@
-package com.ninima.triphelper;
+package com.ninima.triphelper.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
