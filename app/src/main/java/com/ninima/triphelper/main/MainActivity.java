@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.trip.observe(this, new Observer<Trip>() {
             @Override
             public void onChanged(@Nullable Trip trip) {
-                //내부는 UI 쓰레드라서 ui 건드려도 상관없음
+                //내부는 UI 쓰레드라서 ui 건드려도 상관없음(정확히 말하면 ui 작업하라고 있는거)
                 String result = "no result";
                 if(trip != null) {
                     result = trip.getRegisterTime()+"";
