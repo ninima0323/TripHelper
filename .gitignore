@@ -7,7 +7,7 @@
 /captures
 .externalNativeBuild
 
-
+/gradlew.bat
 
 # Created by https://www.gitignore.io/api/java,androidstudio
 
