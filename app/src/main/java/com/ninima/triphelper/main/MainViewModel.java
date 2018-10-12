@@ -2,6 +2,7 @@ package com.ninima.triphelper.main;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.AsyncTask;
 
 import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.model.Trip;
@@ -20,11 +21,26 @@ public class MainViewModel extends ViewModel {
     }
 
     void insertNewTrip(final Trip trip){
-        //runInTransaction 에서 Runnable 에 쿼리 작업을 해주면 백그라운드로 돌아감
-        database.runInTransaction(new Runnable() {
+        //AsyncTask.execute() 에서 Runnable 에 DB 작업을 해주면 백그라운드로 돌아감
+        AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 tripDao.insert(trip);
+            }
+        });
+    }
+
+    void whenDoMultiTransaction(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                database.runInTransaction(new Runnable() {
+                    @Override
+                    public void run() {
+                        //DB작업을 하나 이상 해야할 때는 이런 runInTransaction 을 이용
+                        //이 블럭 안에서 여러 DB 작업 수행
+                    }
+                });
             }
         });
     }
