@@ -3,12 +3,14 @@ package com.ninima.triphelper.global;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.ninima.triphelper.model.Trip;
 import com.ninima.triphelper.main.TripDao;
 
 @Database(entities = {Trip.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class MyDatabase extends RoomDatabase {
     private static MyDatabase instance;
     private final static String DB_NAME = "Trip_Helper_DB";
