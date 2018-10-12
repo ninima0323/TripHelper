@@ -66,8 +66,8 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public boolean onLongClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 
-                dialog.setMessage("삭제하시겠습니까?");
-                dialog.setCancelable(true);
+                dialog.setMessage("여행을 삭제하시겠습니까?");
+                dialog.setCancelable(false);
                 dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -82,7 +82,6 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
                 dialog.show();
-//                notifyDataSetChanged();
                 return false;
             }
         });

@@ -3,11 +3,11 @@ package com.ninima.triphelper.main;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,17 +22,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -157,37 +157,60 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add :
-                show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("여행 추가");
+                builder.setMessage("여행의 이름을 입력해주세요");
+                builder.setCancelable(false);
+                final EditText name = new EditText(this);
+                builder.setView(name);
+                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Trip t = new Trip();
+                        t.setTitle(name.getText().toString());
+                        viewModel.insertNewTrip(t);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("no",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                name.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // Check if edittext is empty
+                        if (TextUtils.isEmpty(s)) {
+                            // Disable ok button
+                            ((AlertDialog) dialog).getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            // Something into edit text. Enable the button.
+                            ((AlertDialog) dialog).getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                        }
+                    }
+                });
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 return true ;
             default :
                 return super.onOptionsItemSelected(item) ;
         }
     }
 
-    //메뉴바에서 새 여행 추가할때 띄우는 다이얼로그
-    void show() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_main, null);
-        builder.setView(view);
-        final Button dialAddBtn = (Button) view.findViewById(R.id.add_btn);
-        final EditText title = (EditText) view.findViewById(R.id.et1);
-        final EditText place= (EditText) view.findViewById(R.id.et2);
-
-        final AlertDialog dialog = builder.create();
-        dialAddBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Trip t = new Trip();
-                t.setTitle(title.getText().toString());
-                t.setPlace(place.getText().toString());
-                viewModel.insertNewTrip(t);
-                mAdapter.notifyDataSetChanged();
-                //Toast.makeText(getApplicationContext(), city1.getText().toString()+city2.getText().toString(),Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
 
     //전체 바 색 다르게하기
     private void changeBarColor(){
