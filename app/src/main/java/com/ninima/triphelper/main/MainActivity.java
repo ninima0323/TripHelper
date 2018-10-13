@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.model.Trip;
 
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     TripAdapter mAdapter;
     RecyclerView rv;
     List<Trip> tripList ;
+
+    Bitmap bitmap;
     ImageView backImg;
     private static final int PICK_FROM_CAMERA = 0000;
     private static final int PICK_FROM_ALBUM = 1111;
@@ -108,13 +111,19 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);//트루면 백버튼이 생김
 
         collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsingToolbarLayout);
+        backImg = (ImageView)findViewById(R.id.ivParallax);
+        String bi = Manager.getPreferences(this);
+        if(!TextUtils.isEmpty(bi)){
+            BASIC=-1;
+            photoUri = Uri.parse(Manager.getPreferences(this));
+            backImg.setImageURI(photoUri);
+        }
         changeBarColor();
 
         rv = (RecyclerView)findViewById(R.id.main_rv);
@@ -140,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
         };
         TedPermission.with(this)
                 .setPermissionListener(permissionlistener)
-                .setRationaleMessage("카메라/앨범 사용 권한")
+                .setRationaleMessage("카메라/앨범 사용 권한이 필요해요")
                 .setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
-        backImg = (ImageView)findViewById(R.id.ivParallax);
+
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
     //전체 바 색 다르게하기
     private void changeBarColor(){
         try {
-            Bitmap bitmap;
             if(BASIC != -1){
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.city);
             }else{
@@ -385,17 +393,18 @@ public class MainActivity extends AppCompatActivity {
                 photoUri=data.getData();
                 BASIC=-1;
                 changeBarColor();
+                Manager.savePreferences(this, photoUri);
                 break;
             case PICK_FROM_CAMERA:
                 getPictureForPhoto(); //카메라에서 가져오기
                 galleryAddPic();
                 BASIC=-1;
                 changeBarColor();
+                Manager.savePreferences(this, photoUri);
                 break;
             default:
                 break;
         }
 
     }
-
 }
