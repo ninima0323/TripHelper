@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,9 +29,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -144,6 +145,37 @@ public class MainActivity extends AppCompatActivity {
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
+        backImg = (ImageView)findViewById(R.id.ivParallax);
+        backImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setMessage("변경할 배경을 선택하세요");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("앨범선택", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectGallery();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("사진촬영", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectCamera();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
     }
 
     //메뉴바 적용한것
@@ -219,7 +251,8 @@ public class MainActivity extends AppCompatActivity {
             if(BASIC != -1){
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.city);
             }else{
-                bitmap = BitmapFactory.decodeFile(getRealPathFromURI(photoUri));
+               // bitmap = BitmapFactory.decodeFile(getRealPathFromURI(photoUri));
+                bitmap = ((BitmapDrawable)backImg.getDrawable()).getBitmap();
             }
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
@@ -227,21 +260,22 @@ public class MainActivity extends AppCompatActivity {
                 public void onGenerated(Palette palette) {
                     int vibrantColor = palette.getVibrantColor(R.color.sbDefault);
                     int vibrantLightColor = palette.getDarkVibrantColor(R.color.tbDefault);
-
-                    if(getColorHashCode(vibrantColor).equals("#7f060091"))
+                    //Log.e("tttttttttttt", getColorHashCode(vibrantColor) );
+                    if(getColorHashCode(vibrantColor).equals("#7f05007a"))
                         Toast.makeText(MainActivity.this, "색 추출 실패", Toast.LENGTH_LONG).show();
 
                     collapsingToolbarLayout.setContentScrimColor(removeAlphaProperty(vibrantColor));
                     changeStatusBarColor(removeAlphaProperty(vibrantColor));
+                    //Log.e("tttttttttttt", getColorHashCode(removeAlphaProperty(vibrantColor)) );
                 }
             });
 
         } catch (Exception e) {
             Toast.makeText(MainActivity.this, "색 추출 실패", Toast.LENGTH_LONG).show();
             collapsingToolbarLayout.setContentScrimColor(
-                    ContextCompat.getColor(this, R.color.tbDefault)
+                    ContextCompat.getColor(this, R.color.hihihi)
             );
-            changeStatusBarColor(R.color.sbDefault);
+            changeStatusBarColor(R.color.hihihi);
         }
     }
 
@@ -266,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
+        photoUri = contentUri;
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
         Toast.makeText(this, "사진이 저장되었습니다", Toast.LENGTH_SHORT).show();
@@ -296,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "TestScrollView");
+        File dir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "TripHelper");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -348,11 +383,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("activity result", data.getData().toString());
                 sendPicture(data.getData()); //갤러리에서 가져오기
                 photoUri=data.getData();
+                BASIC=-1;
                 changeBarColor();
                 break;
             case PICK_FROM_CAMERA:
                 getPictureForPhoto(); //카메라에서 가져오기
                 galleryAddPic();
+                BASIC=-1;
                 changeBarColor();
                 break;
             default:
@@ -360,4 +397,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ninima.triphelper.BR;
 import com.ninima.triphelper.model.Trip;
@@ -50,6 +51,15 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((TripHolder)holder).bind(trip);
         final int pos = position;
 
+        if(trip.getStartDate()==null){
+            ((TripHolder) holder).binding.tv1Trip.setText("여행 날짜를 입력해주세요");
+            ((TripHolder) holder).binding.tv2Trip.setText(" ");
+        }
+
+        //지출총액 확인은 어케??
+        ((TripHolder) holder).binding.tv3Trip.setText("지출 항목을 추가하면 지출 총액이 계산됩니다");
+        ((TripHolder) holder).binding.totalTrip.setText(" ");
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +75,6 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public boolean onLongClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-
                 dialog.setMessage("여행을 삭제하시겠습니까?");
                 dialog.setCancelable(false);
                 dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
