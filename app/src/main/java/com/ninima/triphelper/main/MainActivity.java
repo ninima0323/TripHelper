@@ -3,6 +3,7 @@ package com.ninima.triphelper.main;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,22 +21,24 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.model.Trip;
 
@@ -44,13 +47,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
 
     Toolbar toolbar;
-    //TripAdapter mAdapter;
-    //List<Trip> tripList = new List<>();
+    TripAdapter mAdapter;
+    RecyclerView rv;
+    List<Trip> tripList ;
+
+    Bitmap bitmap;
     ImageView backImg;
     private static final int PICK_FROM_CAMERA = 0000;
     private static final int PICK_FROM_ALBUM = 1111;
@@ -71,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
         //액티비티와 생명주기를 함께하는 뷰모델 객체, 뷰모델은 액티비티가 끝나면 같이 끝나서 이미 finish 된 뷰에 ui 작업하는걸 걱정하지 않아도 됨
         viewModel = ViewModelProviders.of(this)
                 .get(MainViewModel.class);
+
+        viewModel.tripList.observe(this, new Observer<List<Trip>>() {
+            @Override
+            public void onChanged(@Nullable List<Trip> trips) {
+                //여기서 trips를 갱신해줘야지
+                //trips가 갱신된 리스트야 ㅋ댑터에 넣고
+                mAdapter.tripList=trips;
+                mAdapter.notifyDataSetChanged();
+            }
+        });
 
 //        //뷰모델에 만들어 놓은 LiveData 를 observe(구독, 관찰?)함
 //        //디비에 정보가 바뀔 때 마다 onChanged 호출
@@ -94,14 +111,30 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);//트루면 백버튼이 생김
 
         collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsingToolbarLayout);
+        backImg = (ImageView)findViewById(R.id.ivParallax);
+        String bi = Manager.getPreferences(this);
+        if(!TextUtils.isEmpty(bi)){
+            BASIC=-1;
+            photoUri = Uri.parse(Manager.getPreferences(this));
+            backImg.setImageURI(photoUri);
+        }
         changeBarColor();
+
+        rv = (RecyclerView)findViewById(R.id.main_rv);
+        mAdapter = new TripAdapter(this, tripList, new ItemDeleteListener() {
+            @Override
+            public void onItemClick(Trip trip) {
+                viewModel.deleteTrip(trip);
+                //위에서 노티파이해줬어여
+            }
+        });
+        rv.setAdapter(mAdapter);
 
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
@@ -116,10 +149,41 @@ public class MainActivity extends AppCompatActivity {
         };
         TedPermission.with(this)
                 .setPermissionListener(permissionlistener)
-                .setRationaleMessage("카메라/앨범 사용 권한")
+                .setRationaleMessage("카메라/앨범 사용 권한이 필요해요")
                 .setDeniedMessage("왜 거부하셨어요...\n하지만 [설정] > [권한] 에서 권한을 허용할 수 있어요.")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
+
+
+        backImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setMessage("변경할 배경을 선택하세요");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("앨범선택", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectGallery();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("사진촬영", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectCamera();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
 
     }
 
@@ -134,48 +198,69 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add :
-                show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("여행 추가");
+                builder.setMessage("여행의 이름을 입력해주세요");
+                builder.setCancelable(false);
+                final EditText name = new EditText(this);
+                builder.setView(name);
+                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Trip t = new Trip();
+                        t.setTitle(name.getText().toString());
+                        viewModel.insertNewTrip(t);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("no",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                name.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // Check if edittext is empty
+                        if (TextUtils.isEmpty(s)) {
+                            // Disable ok button
+                            ((AlertDialog) dialog).getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            // Something into edit text. Enable the button.
+                            ((AlertDialog) dialog).getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                        }
+                    }
+                });
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 return true ;
             default :
                 return super.onOptionsItemSelected(item) ;
         }
     }
 
-    //메뉴바에서 새 여행 추가할때 띄우는 다이얼로그
-    void show() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View view = inflater.inflate(R.layout.main_dialog, null);
-//        builder.setView(view);
-//        final Button dialAddBtn = (Button) view.findViewById(R.id.add_btn);
-//        final EditText title = (EditText) view.findViewById(R.id.et1);
-//        final EditText place= (EditText) view.findViewById(R.id.et2);
-//
-//        final AlertDialog dialog = builder.create();
-//        dialAddBtn.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//
-//                Trip trips = new Trip(title.getText().toString(), place.getText().toString());
-//                tripList.add(trips);
-//                mAdapter.notifyDataSetChanged();
-//                //Toast.makeText(getApplicationContext(), city1.getText().toString()+city2.getText().toString(),Toast.LENGTH_LONG).show();
-//
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        dialog.show();
-
-    }
 
     //전체 바 색 다르게하기
     private void changeBarColor(){
         try {
-            Bitmap bitmap;
             if(BASIC != -1){
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.city);
             }else{
-                bitmap = BitmapFactory.decodeFile(getRealPathFromURI(photoUri));
+               // bitmap = BitmapFactory.decodeFile(getRealPathFromURI(photoUri));
+                bitmap = ((BitmapDrawable)backImg.getDrawable()).getBitmap();
             }
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
@@ -183,21 +268,22 @@ public class MainActivity extends AppCompatActivity {
                 public void onGenerated(Palette palette) {
                     int vibrantColor = palette.getVibrantColor(R.color.sbDefault);
                     int vibrantLightColor = palette.getDarkVibrantColor(R.color.tbDefault);
-
-                    if(getColorHashCode(vibrantColor).equals("#7f060091"))
+                    //Log.e("tttttttttttt", getColorHashCode(vibrantColor) );
+                    if(getColorHashCode(vibrantColor).equals("#7f05007a"))
                         Toast.makeText(MainActivity.this, "색 추출 실패", Toast.LENGTH_LONG).show();
 
                     collapsingToolbarLayout.setContentScrimColor(removeAlphaProperty(vibrantColor));
                     changeStatusBarColor(removeAlphaProperty(vibrantColor));
+                    //Log.e("tttttttttttt", getColorHashCode(removeAlphaProperty(vibrantColor)) );
                 }
             });
 
         } catch (Exception e) {
             Toast.makeText(MainActivity.this, "색 추출 실패", Toast.LENGTH_LONG).show();
             collapsingToolbarLayout.setContentScrimColor(
-                    ContextCompat.getColor(this, R.color.tbDefault)
+                    ContextCompat.getColor(this, R.color.hihihi)
             );
-            changeStatusBarColor(R.color.sbDefault);
+            changeStatusBarColor(R.color.hihihi);
         }
     }
 
@@ -222,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
+        photoUri = contentUri;
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
         Toast.makeText(this, "사진이 저장되었습니다", Toast.LENGTH_SHORT).show();
@@ -252,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "TestScrollView");
+        File dir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "TripHelper");
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -304,12 +391,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("activity result", data.getData().toString());
                 sendPicture(data.getData()); //갤러리에서 가져오기
                 photoUri=data.getData();
+                BASIC=-1;
                 changeBarColor();
+                Manager.savePreferences(this, photoUri);
                 break;
             case PICK_FROM_CAMERA:
                 getPictureForPhoto(); //카메라에서 가져오기
                 galleryAddPic();
+                BASIC=-1;
                 changeBarColor();
+                Manager.savePreferences(this, photoUri);
                 break;
             default:
                 break;

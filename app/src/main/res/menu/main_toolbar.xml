@@ -6,7 +6,7 @@
         android:id="@+id/action_add"
         android:icon="@drawable/add"
         android:title="Add"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 
 </menu>
