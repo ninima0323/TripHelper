@@ -2,14 +2,8 @@ package com.ninima.triphelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
-import android.util.Base64;
-
-import com.ninima.triphelper.main.MainActivity;
-
-import java.io.ByteArrayOutputStream;
 
 import static android.content.Context.MODE_PRIVATE;
 

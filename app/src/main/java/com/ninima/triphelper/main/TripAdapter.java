@@ -3,13 +3,14 @@ package com.ninima.triphelper.main;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ninima.triphelper.BR;
+import com.ninima.triphelper.detail.DetailActivity;
 import com.ninima.triphelper.model.Trip;
 
 import java.util.List;
@@ -46,28 +47,28 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final Trip trip = tripList.get(position);
         ((TripHolder)holder).bind(trip);
         final int pos = position;
 
         if(trip.getStartDate()==null){
-            ((TripHolder) holder).binding.tv1Trip.setText("여행 날짜를 입력해주세요");
+            ((TripHolder) holder).binding.tv1Trip.setText("여행 날짜를 입력해주세요.");
             ((TripHolder) holder).binding.tv2Trip.setText(" ");
         }
 
         //지출총액 확인은 어케??
-        ((TripHolder) holder).binding.tv3Trip.setText("지출 항목을 추가하면 지출 총액이 계산됩니다");
+        ((TripHolder) holder).binding.tv3Trip.setText("지출 항목을 추가하면 지출 총액이 계산됩니다.");
         ((TripHolder) holder).binding.totalTrip.setText(" ");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //상세로 이동하기
-//                Intent intent = new Intent(context, DetailActivity.class);
-//                intent.putExtra("TripTitle", trip.getTitle());
-//                 intent.putExtra("tid", trip.getTid());
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("trip_title", trip.getTitle());
+                intent.putExtra("tid", trip.getRegisterTime());
+                context.startActivity(intent);
             }
         });
 
