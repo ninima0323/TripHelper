@@ -5,6 +5,7 @@
     <color name="colorAccent">#D81B60</color>
 
     <!--toolbar default-->
+    <color name="activity_background">#FFFEFB</color>
     <color name="sbDefault">#ffad392b</color>
     <color name="tbDefault">#ffd04838</color>
     <color name="item_title">#555555</color>

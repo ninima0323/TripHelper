@@ -3,6 +3,7 @@ package com.ninima.triphelper.main;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,6 +41,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
+import com.ninima.triphelper.detail.DetailActivity;
 import com.ninima.triphelper.model.Trip;
 
 import java.io.File;
@@ -51,6 +53,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
+
+    Context context = this;
 
     Toolbar toolbar;
     TripAdapter mAdapter;
@@ -159,22 +163,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                dialog.setMessage("변경할 배경을 선택하세요");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("앨범선택", new DialogInterface.OnClickListener() {
+                dialog.setMessage("사진을 바꾸시겠습니까?");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("앨범 선택", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         selectGallery();
                         dialog.dismiss();
                     }
                 });
-                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setNegativeButton("사진촬영", new DialogInterface.OnClickListener() {
+//                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+                dialog.setNegativeButton("사진 촬영", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         selectCamera();
@@ -210,9 +214,12 @@ public class MainActivity extends AppCompatActivity {
                         t.setTitle(name.getText().toString());
                         viewModel.insertNewTrip(t);
                         dialog.dismiss();
+                        Intent addintent = new Intent(context, DetailActivity.class);
+                        addintent.putExtra("trip_title", t.getTitle());
+                        addintent.putExtra("tid",t.getRegisterTime());
+                        startActivity(addintent);
                     }
                 });
-
                 builder.setNegativeButton("no",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.dismiss();

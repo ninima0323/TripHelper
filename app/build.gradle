@@ -23,7 +23,7 @@ android {
 
 dependencies {
     def android_arch_version = "1.1.1"
-    
+
     //ACC Room
     implementation "android.arch.persistence.room:runtime:$android_arch_version"
     annotationProcessor "android.arch.persistence.room:compiler:$android_arch_version"
