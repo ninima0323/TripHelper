@@ -281,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
 
                     collapsingToolbarLayout.setContentScrimColor(removeAlphaProperty(vibrantColor));
                     changeStatusBarColor(removeAlphaProperty(vibrantColor));
-                    //Log.e("tttttttttttt", getColorHashCode(removeAlphaProperty(vibrantColor)) );
                 }
             });
 

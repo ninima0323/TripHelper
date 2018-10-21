@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-    <!--toolbar default-->
+
     <color name="activity_background">#FFFEFB</color>
     <color name="sbDefault">#ffad392b</color>
     <color name="tbDefault">#ffd04838</color>
@@ -12,4 +12,7 @@
     <color name="item_info">#777777</color>
     <color name="gradation_end">#45000000</color>
     <color name="hihihi">#ff05007a</color>
+    <color name="text_on_image_70">#b3ffffff</color>
+    <color name="text_on_image">#ffffffff</color>
+
 </resources>
