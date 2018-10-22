@@ -214,10 +214,10 @@ public class MainActivity extends AppCompatActivity {
                         t.setTitle(name.getText().toString());
                         viewModel.insertNewTrip(t);
                         dialog.dismiss();
-                        Intent addintent = new Intent(context, DetailActivity.class);
-                        addintent.putExtra("trip_title", t.getTitle());
-                        addintent.putExtra("tid",t.getRegisterTime());
-                        startActivity(addintent);
+//                        Intent addintent = new Intent(context, DetailActivity.class);
+//                        addintent.putExtra("trip_title", t.getTitle());
+//                        addintent.putExtra("tid",t.getRegisterTime());
+//                        startActivity(addintent);
                     }
                 });
                 builder.setNegativeButton("no",new DialogInterface.OnClickListener() {

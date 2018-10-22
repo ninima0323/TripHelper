@@ -23,10 +23,13 @@ public interface TripDao {
     void update(Trip trip);
 
     @Query("SELECT * FROM Trip ORDER BY registerTime DESC LIMIT 1")
-    LiveData<Trip> getOne();
+    LiveData<Trip> getRecentOne();
 
     @Query("SELECT * FROM Trip ORDER BY registerTime DESC")
     LiveData<List<Trip>> getAll();
+
+    @Query("SELECT * FROM Trip WHERE registerTime = :tid")
+    LiveData<Trip> getOne(long tid);
 
 
 }

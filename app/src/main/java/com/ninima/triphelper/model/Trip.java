@@ -1,6 +1,7 @@
 package com.ninima.triphelper.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
@@ -12,7 +13,10 @@ public class Trip {
 
     private Date startDate, endDate;
 
-    private String title, place, people, picUri;
+    private String title, place, comment,picUri;
+
+//    @Ignore
+//    private float totalPrice;
 
     public Trip(){
         registerTime = System.currentTimeMillis();
@@ -58,12 +62,12 @@ public class Trip {
         this.place = place;
     }
 
-    public String getPeople() {
-        return people;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPeople(String people) {
-        this.people = people;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getPicUri() {

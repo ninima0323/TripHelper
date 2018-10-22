@@ -1,7 +1,13 @@
 package com.ninima.triphelper.detail;
 
+import android.app.DatePickerDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,6 +24,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -25,22 +32,39 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
+import com.ninima.triphelper.databinding.ActivityDetailBinding;
+import com.ninima.triphelper.model.Trip;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
+
+    Context context = this;
+    public DetailViewModel viewModel;
+    Trip trip;
+
+    ActivityDetailBinding binding;
+
+    TextView dateNotice;
+    LinearLayout dateLayout;
 
     Bitmap bitmap;
     ImageView backImg;
@@ -57,26 +81,37 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        //TextView t = (TextView)findViewById(R.id.tv_detail);
+        binding.setVariable(com.ninima.triphelper.BR.trip, trip);
+
         Intent intent = getIntent();
         long tid = intent.getLongExtra("tid",-1);
-        String title = intent.getStringExtra("trip_title");
-        //t.setText(tid+"\n"+title);
+        String bartitle = intent.getStringExtra("trip_title");
 
+        DetailViewModel.DetailViewModelFactory factory = new DetailViewModel.DetailViewModelFactory(tid);
+        viewModel = ViewModelProviders.of(this, factory)
+                .get(DetailViewModel.class);
+
+        viewModel.trip.observe(this, new Observer<Trip>() {
+            @Override
+            public void onChanged(@Nullable Trip trip) {
+                setupTripDetail(trip);
+            }
+        });
+
+        dateNotice = (TextView)findViewById(R.id.notice_tv);
+        dateLayout = (LinearLayout)findViewById(R.id.l_date);
         collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.htab_collapse_toolbar);
         changeBarColor();
-
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-//            Intent intent=new Intent(this.getIntent());
-//            String s=intent.getStringExtra("TripTitle");
-//            tid = intent.getIntExtra("tid",-1);
-            //getSupportActionBar().setTitle(trip.getTitle());
+            getSupportActionBar().setTitle(bartitle);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.htab_viewpager);
         setupViewPager(viewPager);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.htab_tabs);
@@ -103,7 +138,234 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        binding.commentTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("여행상세 정보");
+                dialog.setMessage("여행에 대한 간략한 설명을 남겨주세요.");
+                dialog.setCancelable(false);
+                final EditText name = new EditText(context);
+                if(trip.getComment()==null){
+                    name.setHint("동반자, 컨셉 등");
+                }else{
+                    name.setHint(trip.getComment());
+                }
+                dialog.setView(name);
+                dialog.setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        binding.commentTv.setText(name.getText().toString());
+                        trip.setComment(name.getText().toString());
+                        viewModel.updateTrip(trip);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
 
+        binding.dateTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                if(trip.getStartDate()!=null) c.setTime(trip.getStartDate());
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                binding.dateTv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                trip.setStartDate(c.getTime());
+                                viewModel.updateTrip(trip);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+
+            }
+        });
+
+        binding.date2Tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                if(trip.getEndDate()!=null) c.setTime(trip.getEndDate());
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                binding.date2Tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                trip.setEndDate(c.getTime());
+                                viewModel.updateTrip(trip);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        binding.placeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("여행상세 정보");
+                dialog.setMessage("방문 지역을 입력해주세요.");
+                dialog.setCancelable(false);
+                final EditText name = new EditText(context);
+                if(trip.getPlace()==null){
+                    name.setHint("한국");
+                }else{
+                    name.setHint(trip.getPlace());
+                }
+                dialog.setView(name);
+                dialog.setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        binding.placeTv.setText(name.getText().toString());
+                        trip.setPlace(name.getText().toString());
+                        viewModel.updateTrip(trip);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        backImg = (ImageView)findViewById(R.id.htab_header);
+        backImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(DetailActivity.this);
+                dialog.setMessage("변경할 배경을 선택하세요");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("앨범선택", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectGallery();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("사진촬영", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectCamera();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        dateNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                if(trip.getStartDate()!=null) c.setTime(trip.getStartDate());
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                trip.setStartDate(c.getTime());
+                                viewModel.updateTrip(trip);
+                                binding.dateTv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                dateLayout.setVisibility(View.VISIBLE);
+                                dateNotice.setText("");
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+
+                final Calendar cal = Calendar.getInstance();
+                if(trip.getEndDate()!=null) cal.setTime(trip.getEndDate());
+                int nYear = cal.get(Calendar.YEAR); // current year
+                int nMonth = cal.get(Calendar.MONTH); // current month
+                int nDay = cal.get(Calendar.DAY_OF_MONTH); // current day
+
+                DatePickerDialog datePickerDialog2 = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                cal.set(Calendar.YEAR, year);
+                                cal.set(Calendar.MONTH, monthOfYear+1);
+                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                trip.setEndDate(cal.getTime());
+                                viewModel.updateTrip(trip);
+                                binding.date2Tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                dateLayout.setVisibility(View.VISIBLE);
+                                dateNotice.setText("");
+                            }
+                        }, nYear, nMonth, nDay);
+                datePickerDialog2.show();
+            }
+        });
+
+    }
+
+    private void setupTripDetail(Trip t){
+
+        trip = t;
+        binding.setTrip(t);
+
+        if(trip.getComment()==null || trip.getComment().isEmpty()){
+            binding.commentTv.setText("여행에 대한 간략한 설명을 남겨주세요.");
+        }else{
+            binding.commentTv.setText(trip.getComment());
+        }
+
+        if(trip.getPlace()==null || trip.getPlace().isEmpty()){
+            binding.placeTv.setText("방문하는 지역을 남겨주세요.");
+        }else{
+            binding.placeTv.setText(trip.getPlace());
+        }
+
+        if(trip.getStartDate()==null){
+            dateLayout.setVisibility(View.INVISIBLE);
+            dateNotice.setText("여행 기간을 입력해 주세요.");
+        }else{
+            dateLayout.setVisibility(View.VISIBLE);
+            dateNotice.setText("");
+//            binding.dateTv.setText(trip.getStartDate());
+//            binding.textView2.setText("~");
+//            binding.date2Tv.setText(trip.getEndDate());
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -318,4 +580,5 @@ public class DetailActivity extends AppCompatActivity {
         }
 
     }
+
 }
