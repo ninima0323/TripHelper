@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".detail.EditSpendActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/htab_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="top"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <EditText
+        android:id="@+id/titleEt_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="무엇에 지출하셨나요?"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <EditText
+        android:id="@+id/priceEt_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="얼마 지출하셨나요?"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <EditText
+        android:id="@+id/detailEt_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="메모를 남겨주세요."
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

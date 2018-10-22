@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +100,15 @@ public class DetailActivity extends AppCompatActivity {
                 setupTripDetail(trip);
             }
         });
+
+
+        backImg = (ImageView)findViewById(R.id.htab_header);
+//        String bi = trip.getPicUri();
+//        if(!TextUtils.isEmpty(bi)){
+//            BASIC=-1;
+//            photoUri = Uri.parse(bi);
+//            backImg.setImageURI(photoUri);
+//        }
 
         dateNotice = (TextView)findViewById(R.id.notice_tv);
         dateLayout = (LinearLayout)findViewById(R.id.l_date);
@@ -254,7 +264,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        backImg = (ImageView)findViewById(R.id.htab_header);
+
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -362,10 +372,17 @@ public class DetailActivity extends AppCompatActivity {
         }else{
             dateLayout.setVisibility(View.VISIBLE);
             dateNotice.setText("");
-//            binding.dateTv.setText(trip.getStartDate());
-//            binding.textView2.setText("~");
-//            binding.date2Tv.setText(trip.getEndDate());
         }
+
+        String bi = trip.getPicUri();
+        if(!TextUtils.isEmpty(bi)){
+            BASIC=-1;
+            photoUri = Uri.parse(bi);
+            backImg.setImageURI(photoUri);
+            changeBarColor();
+        }
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -390,11 +407,27 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_add:
-                //추가화면
-//                Intent intent = new Intent(this, EditContentActivity.class);
-//                intent.putExtra("barColor", trip.getBarColor());
-//                intent.putExtra("TripId", trip.getTid());
-//                startActivity(intent);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("기록 추가");
+                dialog.setMessage("메모와 지출 중 하나를 선택해 주세요.");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("지출", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Intent intent = new Intent(context, EditSpendActivity.class);
+                        intent.putExtra("tid", trip.getRegisterTime());
+                        context.startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setNegativeButton("메모",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Intent intent = new Intent(context, EditMemoActivity.class);
+                        intent.putExtra("tid", trip.getRegisterTime());
+                        context.startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
                 return true;
 
         }
@@ -555,10 +588,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //backImg.setImageURI(data.getData());
-        Log.e("activity result", resultCode + "");
         if(resultCode != RESULT_OK) return;
-        Log.e("activity result", requestCode + "");
         switch (requestCode){
             case PICK_FROM_ALBUM:
                 Log.e("activity result", data.getData().toString());
@@ -566,14 +596,16 @@ public class DetailActivity extends AppCompatActivity {
                 photoUri=data.getData();
                 BASIC=-1;
                 changeBarColor();
-                Manager.savePreferences(this, photoUri);
+                trip.setPicUri(photoUri.toString());
+                viewModel.updateTrip(trip);
                 break;
             case PICK_FROM_CAMERA:
                 getPictureForPhoto(); //카메라에서 가져오기
                 galleryAddPic();
                 BASIC=-1;
                 changeBarColor();
-                Manager.savePreferences(this, photoUri);
+                trip.setPicUri(photoUri.toString());
+                viewModel.updateTrip(trip);
                 break;
             default:
                 break;

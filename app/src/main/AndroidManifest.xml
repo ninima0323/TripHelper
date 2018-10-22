@@ -32,7 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".detail.DetailActivity"></activity>
+        <activity android:name=".detail.DetailActivity" />
+        <activity android:name=".detail.EditSpendActivity" />
+        <activity android:name=".detail.EditMemoActivity"></activity>
     </application>
 
 </manifest>
