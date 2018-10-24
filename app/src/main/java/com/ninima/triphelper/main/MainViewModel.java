@@ -22,7 +22,7 @@ public class MainViewModel extends ViewModel {
     //생성자는 ViewModelProviders.of(this).get(MainViewModel.class);에서 알아서 호출해 줌
     public MainViewModel(){
         trip = tripDao.getRecentOne();
-        tripList = tripDao.getAll();
+        tripList = tripDao.getAllTrip();
     }
 
     void insertNewTrip(final Trip trip){

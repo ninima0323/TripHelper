@@ -10,7 +10,7 @@ import java.util.Date;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "tid", childColumns = "trip_id",
+@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "registerTime", childColumns = "trip_id",
         onDelete = CASCADE))
 public class Spend {
     @PrimaryKey(autoGenerate = true)
@@ -19,7 +19,9 @@ public class Spend {
     @ColumnInfo(name = "trip_id")
     private long tripId;
 
-    private Date registerDate, titleDate;
+    private Date registerDate, titleDate;  //레지스터가 지출한 시각을 나타내서 분초 다 기록, 타이틀은 스티키헤더위한것으로 자정으로기록
+    private String category, title, detail, place;
+    private float price;
 
     public Date getRegisterDate() {
         return registerDate;
@@ -53,5 +55,57 @@ public class Spend {
 
     public Date getTitleDate() {
         return titleDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public void setSid(int sid) {
+        this.sid = sid;
+    }
+
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
+    }
+
+    public void setTitleDate(Date titleDate) {
+        this.titleDate = titleDate;
     }
 }

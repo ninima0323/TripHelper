@@ -41,7 +41,6 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
-import com.ninima.triphelper.detail.DetailActivity;
 import com.ninima.triphelper.model.Trip;
 
 import java.io.File;

@@ -11,20 +11,14 @@ import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.main.TripDao;
 import com.ninima.triphelper.model.Trip;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class DetailViewModel extends ViewModel{
     private MyDatabase database = MyDatabase.instance();
     private TripDao tripDao =  database.tripDao();
     LiveData<Trip> trip;
 
     public DetailViewModel(long tid){
-        trip = tripDao.getOne(tid);
+        trip = tripDao.getOneTrip(tid);
         Log.e("trip", ""+(trip == null)+tid);
-    }
-
-    void setThisTrip(long tid){
-        this.trip = tripDao.getOne(tid);
     }
 
     void updateTrip(final Trip trip){

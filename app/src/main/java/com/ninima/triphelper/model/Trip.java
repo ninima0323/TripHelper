@@ -2,11 +2,13 @@ package com.ninima.triphelper.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
+import java.util.Map;
 
-@Entity
+@Entity(indices = {@Index("registerTime")})
 public class Trip {
     @PrimaryKey
     private long registerTime;
@@ -14,6 +16,8 @@ public class Trip {
     private Date startDate, endDate;
 
     private String title, place, comment,picUri;
+
+    public Map<String, Boolean> categories;
 
 //    @Ignore
 //    private float totalPrice;
@@ -76,5 +80,13 @@ public class Trip {
 
     public void setPicUri(String picUri) {
         this.picUri = picUri;
+    }
+
+    public Map<String, Boolean> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Map<String, Boolean> categories) {
+        this.categories = categories;
     }
 }

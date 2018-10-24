@@ -18,14 +18,62 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="무엇에 지출하셨나요?"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="200dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="필수 입력 :\n제목, 카테고리, 금액"
+        android:layout_marginBottom="200dp"
+        android:layout_marginStart="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/titleEt_editSpend"/>
+
+
+
+    <TextView
+        android:id="@+id/Spend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카테고리"
+        android:layout_marginBottom="160dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
 
     <EditText
         android:id="@+id/priceEt_editSpend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="얼마 지출하셨나요?"
+        android:layout_marginBottom="120dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/date_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2018/10/10"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <TextView
+        android:id="@+id/time_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="19:02"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/date_editSpend"/>
+
+    <EditText
+        android:id="@+id/placeEt_editSpend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="어디에서 지출하셨나요?"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <EditText
@@ -33,7 +81,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="메모를 남겨주세요."
-        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

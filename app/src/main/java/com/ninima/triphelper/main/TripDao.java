@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 import com.ninima.triphelper.model.Trip;
 
 import java.util.List;
+import java.util.Map;
 
 @Dao
 public interface TripDao {
@@ -26,10 +27,13 @@ public interface TripDao {
     LiveData<Trip> getRecentOne();
 
     @Query("SELECT * FROM Trip ORDER BY registerTime DESC")
-    LiveData<List<Trip>> getAll();
+    LiveData<List<Trip>> getAllTrip();
 
     @Query("SELECT * FROM Trip WHERE registerTime = :tid")
-    LiveData<Trip> getOne(long tid);
+    LiveData<Trip> getOneTrip(long tid);
+
+    @Query("SELECT categories FROM Trip WHERE registerTime = :tid")
+    LiveData<Map<String, Boolean>> getCategories(long tid);
 
 
 }

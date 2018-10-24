@@ -43,7 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityDetailBinding;
 import com.ninima.triphelper.model.Trip;
@@ -103,13 +102,6 @@ public class DetailActivity extends AppCompatActivity {
 
 
         backImg = (ImageView)findViewById(R.id.htab_header);
-//        String bi = trip.getPicUri();
-//        if(!TextUtils.isEmpty(bi)){
-//            BASIC=-1;
-//            photoUri = Uri.parse(bi);
-//            backImg.setImageURI(photoUri);
-//        }
-
         dateNotice = (TextView)findViewById(R.id.notice_tv);
         dateLayout = (LinearLayout)findViewById(R.id.l_date);
         collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.htab_collapse_toolbar);

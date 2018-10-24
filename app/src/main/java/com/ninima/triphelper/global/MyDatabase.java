@@ -6,10 +6,12 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import com.ninima.triphelper.detail.SpendDao;
+import com.ninima.triphelper.model.Spend;
 import com.ninima.triphelper.model.Trip;
 import com.ninima.triphelper.main.TripDao;
 
-@Database(entities = {Trip.class}, version = 1, exportSchema = false)
+@Database(entities = {Trip.class, Spend.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class MyDatabase extends RoomDatabase {
     private static MyDatabase instance;
@@ -23,5 +25,5 @@ public abstract class MyDatabase extends RoomDatabase {
     }//DB를 가져올 땐 MyDataBase.instance()만 호출하면 됨
 
     public abstract TripDao tripDao();//Dao 가 필요하면 instance().~~Dao();
-    //other Dao
+    public abstract SpendDao spendDao();
 }
