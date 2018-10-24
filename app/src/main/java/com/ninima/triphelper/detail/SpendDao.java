@@ -22,10 +22,10 @@ public interface SpendDao {
     @Update
     void update(Spend spend);
 
-    @Query("SELECT * FROM Spend WHERE trip_id = :tid ORDER BY registerDate DESC")
+    @Query("SELECT * FROM Spend WHERE tripId = :tid ORDER BY registerDate DESC")
     LiveData<List<Spend>> getAllSpend(long tid);
 
-    @Query("SELECT * FROM Spend WHERE trip_id = :tid and category in (:categoryList) ORDER BY registerDate DESC")
+    @Query("SELECT * FROM Spend WHERE tripId = :tid and category in (:categoryList) ORDER BY registerDate DESC")
     LiveData<List<Spend>> getSomeSpend(long tid, List<String> categoryList);
 
     @Query("SELECT * FROM Spend WHERE sid = :sid")

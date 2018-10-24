@@ -33,7 +33,7 @@ public interface TripDao {
     LiveData<Trip> getOneTrip(long tid);
 
     @Query("SELECT categories FROM Trip WHERE registerTime = :tid")
-    LiveData<Map<String, Boolean>> getCategories(long tid);
+    LiveData<String> getCategories(long tid);
 
 
 }

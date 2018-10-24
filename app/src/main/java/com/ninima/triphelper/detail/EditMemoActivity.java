@@ -43,7 +43,7 @@ public class EditMemoActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_add:;
+            case R.id.action_save:
                 return true;
 
         }

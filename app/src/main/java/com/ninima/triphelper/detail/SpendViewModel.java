@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.ninima.triphelper.global.Converters;
 import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.main.TripDao;
 import com.ninima.triphelper.model.Spend;
@@ -19,9 +20,13 @@ public class SpendViewModel extends ViewModel {
     private TripDao tripDao =  database.tripDao();
     private SpendDao spendDao = database.spendDao();
     long tid;
-    LiveData<Map<String, Boolean>> categories;
+    LiveData<String> categories;
     LiveData<List<Spend>> spendList;
     LiveData<Spend> spend;
+
+    public SpendViewModel(){
+        spendList = spendDao.getAllSpend(tid);
+    }
 
     public SpendViewModel(long tid){
         this.tid = tid;
@@ -60,18 +65,19 @@ public class SpendViewModel extends ViewModel {
             @Override
             public void run() {
                 categories = tripDao.getCategories(tid);
+                //옵저버에서 컨버터 사용해 맵으로 고치자
             }
         });
     }
 
-    void filterSpendList(final List<String> categoryList){
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                spendList = spendDao.getSomeSpend(tid, categoryList);
-            }
-        });
-    }
+//    void filterSpendList(final List<String> categoryList){
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                spendList = spendDao.getSomeSpend(tid, categoryList);
+//            }
+//        });
+//    }
 
     static class SpendViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private long tid;

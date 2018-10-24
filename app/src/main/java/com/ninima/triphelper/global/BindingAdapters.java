@@ -16,4 +16,21 @@ public class BindingAdapters {
             tv.setText(d);
         }
     }
+    @BindingAdapter("timetostring")
+    public static void setTime(TextView tv, Date date) {
+        if(date ==null) tv.setText(" ");
+        else{
+            SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
+            String d=transFormat.format(date);
+            tv.setText(d);
+        }
+    }
+    @BindingAdapter("floattostring")
+    public static void setFloat(TextView tv, Float f) {
+        if(f == null) tv.setText(" ");
+        else{
+            String d=Float.toString(f);
+            tv.setText(d);
+        }
+    }
 }

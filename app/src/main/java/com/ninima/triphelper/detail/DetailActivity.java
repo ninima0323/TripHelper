@@ -65,6 +65,7 @@ public class DetailActivity extends AppCompatActivity {
 
     TextView dateNotice;
     LinearLayout dateLayout;
+    long tid;
 
     Bitmap bitmap;
     ImageView backImg;
@@ -82,11 +83,10 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
-
-        binding.setVariable(com.ninima.triphelper.BR.trip, trip);
+        binding.setTrip(trip);
 
         Intent intent = getIntent();
-        long tid = intent.getLongExtra("tid",-1);
+        tid = intent.getLongExtra("tid",-1);
         String bartitle = intent.getStringExtra("trip_title");
 
         DetailViewModel.DetailViewModelFactory factory = new DetailViewModel.DetailViewModelFactory(tid);
@@ -346,13 +346,13 @@ public class DetailActivity extends AppCompatActivity {
         trip = t;
         binding.setTrip(t);
 
-        if(trip.getComment()==null || trip.getComment().isEmpty()){
+        if(TextUtils.isEmpty(trip.getComment())){//trip.getComment()==null || trip.getComment().isEmpty()){
             binding.commentTv.setText("여행에 대한 간략한 설명을 남겨주세요.");
         }else{
             binding.commentTv.setText(trip.getComment());
         }
 
-        if(trip.getPlace()==null || trip.getPlace().isEmpty()){
+        if(TextUtils.isEmpty(trip.getPlace())){
             binding.placeTv.setText("방문하는 지역을 남겨주세요.");
         }else{
             binding.placeTv.setText(trip.getPlace());
@@ -379,7 +379,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new SpendFragment(), "지출상세");
+        adapter.addFrag(new SpendFragment(tid), "지출상세");
         adapter.addFrag(new StatisticsFragment(), "지출통계");
         adapter.addFrag(new MemoFragment(), "메모");
         viewPager.setAdapter(adapter);

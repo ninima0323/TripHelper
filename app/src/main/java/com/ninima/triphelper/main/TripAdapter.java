@@ -36,7 +36,7 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         void bind(Trip trip) {
-            binding.setVariable(BR.trip, trip);
+            binding.setTrip(trip);
         }
     }
 

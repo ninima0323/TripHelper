@@ -10,16 +10,17 @@ import java.util.Date;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "registerTime", childColumns = "trip_id",
-        onDelete = CASCADE))
+//@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "registerTime", childColumns = "tripId",
+//        onDelete = CASCADE))
+@Entity
 public class Spend {
     @PrimaryKey(autoGenerate = true)
     private int sid;
 
-    @ColumnInfo(name = "trip_id")
+    //@ColumnInfo(name = "trip_id")
     private long tripId;
 
-    private Date registerDate, titleDate;  //레지스터가 지출한 시각을 나타내서 분초 다 기록, 타이틀은 스티키헤더위한것으로 자정으로기록
+    private Date registerDate = Calendar.getInstance().getTime(), titleDate;  //레지스터가 지출한 시각을 나타내서 분초 다 기록, 타이틀은 스티키헤더위한것으로 자정으로기록
     private String category, title, detail, place;
     private float price;
 

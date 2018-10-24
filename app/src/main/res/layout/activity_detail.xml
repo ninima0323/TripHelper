@@ -82,7 +82,7 @@
                         android:paddingTop="3dp"
                         android:paddingBottom="3dp"
                         android:gravity="left"
-                        android:text='@{(trip.place == null || trip.place.isEmpty()) ? @string/detail_place_default : trip.place }'
+                        android:text='@{TextUtils.isEmpty(trip.place) ? @string/detail_place_default : trip.place }'
                         android:textColor="@color/text_on_image"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toTopOf="@+id/notice_tv"
@@ -119,6 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="bottom"
+                            app:datetostring="@{trip.startDate}"
                             android:textColor="@color/text_on_image"
                             android:textSize="12sp" />
 
@@ -138,6 +139,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
+                            app:datetostring="@{trip.endDate}"
                             android:textColor="@color/text_on_image"
                             android:textSize="12sp" />
                     </LinearLayout>
