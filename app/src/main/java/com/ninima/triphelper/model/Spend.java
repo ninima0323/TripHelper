@@ -21,7 +21,7 @@ public class Spend {
     private long tripId;
 
     private Date registerDate = Calendar.getInstance().getTime(), titleDate;  //레지스터가 지출한 시각을 나타내서 분초 다 기록, 타이틀은 스티키헤더위한것으로 자정으로기록
-    private String category, title, detail, place;
+    private String category, title, detail, place, picUri;
     private float price;
 
     public Date getRegisterDate() {
@@ -108,5 +108,13 @@ public class Spend {
 
     public void setTitleDate(Date titleDate) {
         this.titleDate = titleDate;
+    }
+
+    public String getPicUri() {
+        return picUri;
+    }
+
+    public void setPicUri(String picUri) {
+        this.picUri = picUri;
     }
 }

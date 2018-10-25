@@ -32,9 +32,7 @@ public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         int pos = parent.getChildAdapterPosition(view);
-        Log.e("!!!!!!!1deco",pos+"");
         if (sectionCallback.isSection(pos)) {
-            Log.e("!!!!!!!TOP",pos+"");
             outRect.top = headerOffset;
         }
     }

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ninima.triphelper.R;
-import com.ninima.triphelper.detail.spend.ItemDeleteListener;
 import com.ninima.triphelper.detail.RecyclerSectionItemDecoration;
 import com.ninima.triphelper.model.Spend;
 
@@ -46,7 +45,6 @@ public class SpendFragment extends Fragment {
         viewModel.spendList.observe(this, new Observer<List<Spend>>() {
             @Override
             public void onChanged(@Nullable List<Spend> spends) {
-                Log.e("!!!!!!!!!!observer","size"+spends.size());
                 spendList = spends;
                 mAdapter.spendList=spends;
                 mAdapter.notifyDataSetChanged();
@@ -80,15 +78,12 @@ public class SpendFragment extends Fragment {
             @Override
             public boolean isSection(int position) {   //디비에서 정렬해서 가져올테니 순서대로 비교
 
-                Log.e("!!!!!!!callback","pos"+position+"\tsize"+list.size());
-
                 return position == 0
                 || list.get(position).getTitleDate().compareTo(list.get(position - 1).getTitleDate())!=0;
             }
 
             @Override
             public String getSectionHeader(int position) {
-                Log.e("!!!!!!!Header","pos"+position+"\tsize"+list.size());
                 SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String d=transFormat.format(list.get(position).getTitleDate());
                 return d;

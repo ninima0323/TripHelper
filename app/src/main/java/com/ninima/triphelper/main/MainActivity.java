@@ -37,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.ninima.triphelper.Manager;
@@ -126,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
             BASIC=-1;
             photoUri = Uri.parse(Manager.getPreferences(this));
             backImg.setImageURI(photoUri);
+
+//            Glide.with(context)
+//                    .load(bi)
+//                    .into(backImg);
         }
         changeBarColor();
 

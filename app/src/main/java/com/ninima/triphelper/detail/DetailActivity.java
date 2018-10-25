@@ -44,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityDetailBinding;
 import com.ninima.triphelper.detail.memo.EditMemoActivity;
@@ -376,6 +377,10 @@ public class DetailActivity extends AppCompatActivity {
             BASIC=-1;
             photoUri = Uri.parse(bi);
             backImg.setImageURI(photoUri);
+//
+//            Glide.with(context)
+//                    .load(bi)
+//                    .into(backImg);
             changeBarColor();
         }
 

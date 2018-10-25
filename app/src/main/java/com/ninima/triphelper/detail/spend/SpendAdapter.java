@@ -3,16 +3,23 @@ package com.ninima.triphelper.detail.spend;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.ninima.triphelper.R;
 import com.ninima.triphelper.model.Spend;
 import com.ninima.triphelper.databinding.ItemSpendBinding;
 
 import java.util.List;
+
 
 public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
@@ -27,9 +34,12 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class SpendHolder extends RecyclerView.ViewHolder {
 
         ItemSpendBinding binding;
+        ImageView img;
+
         public SpendHolder(ItemSpendBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            img = (ImageView)itemView.findViewById(R.id.img_spend);
         }
 
         void bind(Spend spend) {
@@ -49,8 +59,6 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((SpendHolder)holder).bind(spend);
         final int pos = position;
 
-        Log.e("!!!!!!!adapter",pos+"!!!!"+spend.getTitle());
-
         if(spend.getRegisterDate()==null){
             ((SpendHolder) holder).binding.timeTvSpend.setText("");
         }
@@ -59,6 +67,23 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         if(spend.getDetail()==null);
 
+        String bi = spend.getPicUri();
+        if(!TextUtils.isEmpty(bi)){
+//            try {
+                Uri photoUri = Uri.parse(bi);
+                ((SpendHolder) holder).img.setImageURI(photoUri);
+                ((SpendHolder) holder).img.setBackground(null);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//                //((SpendHolder) holder).img.setImageDrawable();
+//                Log.e("!!!!!!!!","에러러러러ㅓ러럴");
+//                Toast.makeText(context,"사진이 삭제되어 기본이미지를 셋팅합니다.", Toast.LENGTH_SHORT).show();
+//            }
+//            Uri photoUri = Uri.parse(bi);
+//            Glide.with(context)
+//                    .load(photoUri)
+//                    .into(((SpendHolder) holder).img);
+        }
 
         //지출총액 확인은 어케??
         ((SpendHolder) holder).binding.timeTvSpend.setText(spend.getTitle());
