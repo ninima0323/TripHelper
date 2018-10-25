@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.model.Spend;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
@@ -29,6 +31,7 @@ public class SpendFragment extends Fragment {
     RecyclerView rv;
     SpendAdapter mAdapter;
     List<Spend> spendList;
+    RecyclerSectionItemDecoration sectionItemDecoration;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,8 +44,16 @@ public class SpendFragment extends Fragment {
         viewModel.spendList.observe(this, new Observer<List<Spend>>() {
             @Override
             public void onChanged(@Nullable List<Spend> spends) {
+                spendList = spends;
                 mAdapter.spendList=spends;
                 mAdapter.notifyDataSetChanged();
+
+                sectionItemDecoration =
+                        new RecyclerSectionItemDecoration(getResources().getDimensionPixelSize(R.dimen.header),
+                                true,  //아이템이 헤더에 씹히는 경우가 있으면, 디멘션에서 dp늘려서 해결
+                                getSectionCallback(spends));
+
+                rv.addItemDecoration(sectionItemDecoration);
             }
         });
 
@@ -57,5 +68,22 @@ public class SpendFragment extends Fragment {
         rv.setAdapter(mAdapter);
 
         return view;
+    }
+
+    private RecyclerSectionItemDecoration.SectionCallback getSectionCallback(final List<Spend> list) {
+        return new RecyclerSectionItemDecoration.SectionCallback() {
+            @Override
+            public boolean isSection(int position) {   //디비에서 정렬해서 가져올테니 순서대로 비교
+                return position == 0
+                || list.get(position).getTitleDate().compareTo(list.get(position - 1).getTitleDate())!=0;
+            }
+
+            @Override
+            public String getSectionHeader(int position) {
+                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String d=transFormat.format(list.get(position).getTitleDate());
+                return d;
+            }
+        };
     }
 }
