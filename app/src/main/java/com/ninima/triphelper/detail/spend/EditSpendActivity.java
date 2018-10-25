@@ -1,14 +1,12 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.spend;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityEditSpendBinding;
-import com.ninima.triphelper.global.Converters;
 import com.ninima.triphelper.model.Spend;
 
 import java.text.SimpleDateFormat;

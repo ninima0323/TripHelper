@@ -1,4 +1,4 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.memo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

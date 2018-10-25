@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,9 @@ public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         int pos = parent.getChildAdapterPosition(view);
+        Log.e("!!!!!!!1deco",pos+"");
         if (sectionCallback.isSection(pos)) {
+            Log.e("!!!!!!!TOP",pos+"");
             outRect.top = headerOffset;
         }
     }

@@ -1,4 +1,4 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.spend;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ninima.triphelper.R;
+import com.ninima.triphelper.detail.spend.ItemDeleteListener;
+import com.ninima.triphelper.detail.RecyclerSectionItemDecoration;
 import com.ninima.triphelper.model.Spend;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
@@ -44,16 +46,19 @@ public class SpendFragment extends Fragment {
         viewModel.spendList.observe(this, new Observer<List<Spend>>() {
             @Override
             public void onChanged(@Nullable List<Spend> spends) {
+                Log.e("!!!!!!!!!!observer","size"+spends.size());
                 spendList = spends;
                 mAdapter.spendList=spends;
                 mAdapter.notifyDataSetChanged();
 
-                sectionItemDecoration =
-                        new RecyclerSectionItemDecoration(getResources().getDimensionPixelSize(R.dimen.header),
-                                true,  //아이템이 헤더에 씹히는 경우가 있으면, 디멘션에서 dp늘려서 해결
-                                getSectionCallback(spends));
-
-                rv.addItemDecoration(sectionItemDecoration);
+                if(!spends.isEmpty()){
+                    sectionItemDecoration =
+                            new RecyclerSectionItemDecoration(getResources().getDimensionPixelSize(R.dimen.header),
+                                    true,  //아이템이 헤더에 씹히는 경우가 있으면, 디멘션에서 dp늘려서 해결
+                                    getSectionCallback(spends));
+                    if(rv.getItemDecorationCount()>0) rv.removeItemDecorationAt(0);
+                    rv.addItemDecoration(sectionItemDecoration);
+                }
             }
         });
 
@@ -74,12 +79,16 @@ public class SpendFragment extends Fragment {
         return new RecyclerSectionItemDecoration.SectionCallback() {
             @Override
             public boolean isSection(int position) {   //디비에서 정렬해서 가져올테니 순서대로 비교
+
+                Log.e("!!!!!!!callback","pos"+position+"\tsize"+list.size());
+
                 return position == 0
                 || list.get(position).getTitleDate().compareTo(list.get(position - 1).getTitleDate())!=0;
             }
 
             @Override
             public String getSectionHeader(int position) {
+                Log.e("!!!!!!!Header","pos"+position+"\tsize"+list.size());
                 SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String d=transFormat.format(list.get(position).getTitleDate());
                 return d;

@@ -1,4 +1,4 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.memo;
 
 import android.content.Intent;
 import android.graphics.Color;

@@ -1,14 +1,14 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.spend;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ninima.triphelper.BR;
 import com.ninima.triphelper.model.Spend;
 import com.ninima.triphelper.databinding.ItemSpendBinding;
 
@@ -48,6 +48,8 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final Spend spend = spendList.get(position);
         ((SpendHolder)holder).bind(spend);
         final int pos = position;
+
+        Log.e("!!!!!!!adapter",pos+"!!!!"+spend.getTitle());
 
         if(spend.getRegisterDate()==null){
             ((SpendHolder) holder).binding.timeTvSpend.setText("");

@@ -11,7 +11,7 @@
     <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".detail.EditSpendActivity">
+        tools:context=".detail.spend.EditSpendActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/htab_toolbar"

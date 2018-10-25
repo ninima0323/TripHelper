@@ -1,4 +1,4 @@
-package com.ninima.triphelper.detail;
+package com.ninima.triphelper.detail.spend;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
@@ -6,14 +6,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.ninima.triphelper.global.Converters;
+import com.ninima.triphelper.detail.SpendDao;
 import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.main.TripDao;
 import com.ninima.triphelper.model.Spend;
-import com.ninima.triphelper.model.Trip;
 
 import java.util.List;
-import java.util.Map;
 
 public class SpendViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();

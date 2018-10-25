@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,6 +46,10 @@ import android.widget.Toast;
 
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityDetailBinding;
+import com.ninima.triphelper.detail.memo.EditMemoActivity;
+import com.ninima.triphelper.detail.memo.MemoFragment;
+import com.ninima.triphelper.detail.spend.EditSpendActivity;
+import com.ninima.triphelper.detail.spend.SpendFragment;
 import com.ninima.triphelper.model.Trip;
 
 import java.io.File;
@@ -151,7 +156,7 @@ public class DetailActivity extends AppCompatActivity {
                 if(trip.getComment()==null){
                     name.setHint("동반자, 컨셉 등");
                 }else{
-                    name.setHint(trip.getComment());
+                    name.setText(trip.getComment());
                 }
                 dialog.setView(name);
                 dialog.setPositiveButton("수정", new DialogInterface.OnClickListener() {
