@@ -242,7 +242,7 @@ public class DetailActivity extends AppCompatActivity {
                 if(trip.getPlace()==null){
                     name.setHint("한국");
                 }else{
-                    name.setHint(trip.getPlace());
+                    name.setText(trip.getPlace());
                 }
                 dialog.setView(name);
                 dialog.setPositiveButton("수정", new DialogInterface.OnClickListener() {
@@ -391,7 +391,7 @@ public class DetailActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new SpendFragment(tid), "지출상세");
         adapter.addFrag(new StatisticsFragment(), "지출통계");
-        adapter.addFrag(new MemoFragment(), "메모");
+        adapter.addFrag(new MemoFragment(tid), "메모");
         viewPager.setAdapter(adapter);
     }
 

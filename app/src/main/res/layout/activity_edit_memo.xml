@@ -13,4 +13,20 @@
         android:layout_gravity="top"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <EditText
+        android:id="@+id/contentEt_editMemo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="56dp"
+        android:gravity="top|left"
+        android:hint="메모를 남겨주세요."
+        android:maxLines="15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/htab_toolbar" />
+
 </android.support.constraint.ConstraintLayout>

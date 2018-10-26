@@ -20,6 +20,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -218,9 +219,14 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 if(registerDate != null) spend.setRegisterDate(registerDate);
                 if(place != null || !place.isEmpty()) spend.setPlace(place);
                 if(detailM !=null || !detailM.isEmpty()) spend.setDetail(detailM);
-                viewModel.insertNewSpend(spend);
-                Toast.makeText(this, "지출 내역이 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
+                if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
+                        || TextUtils.isEmpty(Float.toHexString(price))){
+                    Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+                }else {
+                    viewModel.insertNewSpend(spend);
+                    Toast.makeText(this, "지출 내역이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
                 return true;
 
         }
