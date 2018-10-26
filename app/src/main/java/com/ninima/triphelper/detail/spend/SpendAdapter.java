@@ -3,6 +3,7 @@ package com.ninima.triphelper.detail.spend;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -101,8 +102,8 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public boolean onLongClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setMessage("여행을 삭제하시겠습니까?");
-                dialog.setCancelable(false);
+                dialog.setMessage("동작을 선택하세요");
+                dialog.setCancelable(true);
                 dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -110,9 +111,12 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog.dismiss();
                     }
                 });
-                dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                dialog.setNegativeButton("수정", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(context, EditSpendActivity.class);
+                        intent.putExtra("sid", spend.getSid());
+                        context.startActivity(intent);
                         dialog.dismiss();
                     }
                 });

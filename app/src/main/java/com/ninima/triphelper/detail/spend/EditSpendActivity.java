@@ -3,6 +3,7 @@ package com.ninima.triphelper.detail.spend;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +61,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     String mImageCaptureName;//이미지 이름
 
     long tripId;
+    int sid;
+    boolean update = false;
 
     String title, place, detailM, category;
     Float price;
@@ -75,34 +78,58 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_spend);
         binding.setSpend(spend);
 
-        Intent intent = getIntent();
-        final long tid = intent.getLongExtra("tid",-1);
-        tripId = tid;
 
-        SpendViewModel.SpendViewModelFactory factory = new SpendViewModel.SpendViewModelFactory(tid);
-        viewModel = ViewModelProviders.of(this, factory)
-                .get(SpendViewModel.class);
-
+        img = (ImageView)findViewById(R.id.img_editSpend);
         toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setBackgroundColor(Color.GRAY);
         toolbar.setTitleTextColor(Color.WHITE);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("지출 추가");
+
+        Intent intent = getIntent();
+        final long tid = intent.getLongExtra("tid",-1);
+        tripId = tid;
+
+        if(tripId!=-1){
+            SpendViewModel.SpendViewModelFactory factory = new SpendViewModel.SpendViewModelFactory(tid);
+            viewModel = ViewModelProviders.of(this, factory)
+                    .get(SpendViewModel.class);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("지출 추가");
+            }
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR); // current year
+            mMonth = c.get(Calendar.MONTH); // current month
+            mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+            mHour = c.get(Calendar.HOUR_OF_DAY) ;//current hour
+            mMinute=c.get(Calendar.MINUTE);//current minute
+            mSecond = c.get(Calendar.SECOND);
+            registerDate = c.getTime();
+
+        }else{
+            update = true;
+            sid = intent.getIntExtra("sid", -1);
+
+            SpendViewModel.SpendViewModelFactory2 factory = new SpendViewModel.SpendViewModelFactory2(sid);
+            viewModel = ViewModelProviders.of(this, factory)
+                    .get(SpendViewModel.class);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("지출 수정");
+            }
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            viewModel.spend.observe(this, new Observer<Spend>() {
+                @Override
+                public void onChanged(@Nullable Spend spend) {
+                    if(spend!=null){
+                        updateSetting(spend);
+                    }
+                }
+            });
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        img = (ImageView)findViewById(R.id.img_editSpend);
-
-        Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR); // current year
-        mMonth = c.get(Calendar.MONTH); // current month
-        mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-        mHour = c.get(Calendar.HOUR_OF_DAY) ;//current hour
-        mMinute=c.get(Calendar.MINUTE);//current minute
-        mSecond = c.get(Calendar.SECOND);
-        registerDate = c.getTime();
-
 
 
         binding.dateEditSpend.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +217,29 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         return cal.getTime();
     }
 
+    public void updateSetting(Spend s){
+
+        tripId = s.getTripId();
+        registerDate = s.getRegisterDate();
+        binding.priceEtEditSpend.setText(Float.toString(s.getPrice()));
+        binding.titleEtEditSpend.setText(s.getTitle());
+        binding.categoryEditSpend.setText(s.getCategory());
+        binding.placeEtEditSpend.setText(s.getPlace());
+        binding.detailEtEditSpend.setText(s.getDetail());
+
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = transFormat.format(registerDate);
+        SimpleDateFormat transFormat2 = new SimpleDateFormat("HH:mm");
+        String time = transFormat2.format(registerDate);
+        binding.dateEditSpend.setText(date);
+        binding.timeEditSpend.setText(time);
+
+        String bi = s.getPicUri();
+        if(!TextUtils.isEmpty(bi)){
+            photoUri = Uri.parse(bi);
+            img.setImageURI(photoUri);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -206,7 +256,6 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 finish();
                 return true;
             case R.id.action_save:
-                //Spend s = new Spend();
                 title = binding.titleEtEditSpend.getText().toString();
                 category = binding.categoryEditSpend.getText().toString();
                 price = Float.parseFloat(binding.priceEtEditSpend.getText().toString());
@@ -219,14 +268,24 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 if(registerDate != null) spend.setRegisterDate(registerDate);
                 if(place != null || !place.isEmpty()) spend.setPlace(place);
                 if(detailM !=null || !detailM.isEmpty()) spend.setDetail(detailM);
-                if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
-                        || TextUtils.isEmpty(Float.toHexString(price))){
-                    Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
-                }else {
-                    viewModel.insertNewSpend(spend);
-                    Toast.makeText(this, "지출 내역이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+                if(!update){
+                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
+                            || TextUtils.isEmpty(Float.toHexString(price))){
+                        Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }else {
+                        viewModel.insertNewSpend(spend);
+                        Toast.makeText(this, "지출 내역이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
+                }else{
+                    spend.setSid(sid);
+                    viewModel.updateSpend(spend);
+                    Toast.makeText(this, "지출 내역이 수정되었습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+
                 return true;
 
         }

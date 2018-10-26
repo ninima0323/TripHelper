@@ -18,17 +18,19 @@ public class SpendViewModel extends ViewModel {
     private TripDao tripDao =  database.tripDao();
     private SpendDao spendDao = database.spendDao();
     long tid;
+    int sid;
     LiveData<String> categories;
     LiveData<List<Spend>> spendList;
     LiveData<Spend> spend;
 
-    public SpendViewModel(){
-        spendList = spendDao.getAllSpend(tid);
-    }
-
     public SpendViewModel(long tid){
         this.tid = tid;
         spendList = spendDao.getAllSpend(tid);
+    }
+
+    public SpendViewModel(int sid, boolean b){
+        this.sid = sid;
+        this.spend = spendDao.getOneSpend(sid);
     }
 
     void insertNewSpend(final Spend spend){
@@ -68,14 +70,6 @@ public class SpendViewModel extends ViewModel {
         });
     }
 
-//    void filterSpendList(final List<String> categoryList){
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                spendList = spendDao.getSomeSpend(tid, categoryList);
-//            }
-//        });
-//    }
 
     static class SpendViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private long tid;
@@ -87,6 +81,19 @@ public class SpendViewModel extends ViewModel {
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             return ((T)(new SpendViewModel(tid)));
+        }
+    }
+
+    static class SpendViewModelFactory2 extends ViewModelProvider.NewInstanceFactory {
+        private int sid;
+        public SpendViewModelFactory2(int sid){
+            this.sid = sid;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            return ((T)(new SpendViewModel(sid, true)));
         }
     }
 }

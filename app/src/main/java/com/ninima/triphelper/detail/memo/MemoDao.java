@@ -24,4 +24,7 @@ public interface MemoDao {
 
     @Query("SELECT * FROM Memo WHERE tripId = :tid ORDER BY registerTime DESC")
     LiveData<List<Memo>> getAllMemo(long tid);
+
+    @Query("SELECT * FROM Memo WHERE registerTime = :mid")
+    LiveData<Memo> getOneMemo(long mid);
 }
