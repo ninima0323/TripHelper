@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,11 +37,13 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         ItemSpendBinding binding;
         ImageView img;
+        LinearLayout lDetail;
 
         public SpendHolder(ItemSpendBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             img = (ImageView)itemView.findViewById(R.id.img_spend);
+            lDetail = (LinearLayout)itemView.findViewById(R.id.l_detail_spend);
         }
 
         void bind(Spend spend) {
@@ -66,7 +69,10 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if(spend.getPlace()==null){
             ((SpendHolder) holder).binding.placeTvSpend.setText("");
         }
-        if(spend.getDetail()==null);
+        if(spend.getDetail()==null){
+            ((SpendHolder) holder).binding.detailTvSpend.setText("");
+           // ((SpendHolder) holder).lDetail.setVisibility(View.GONE);
+        }
 
         String bi = spend.getPicUri();
         if(!TextUtils.isEmpty(bi)){

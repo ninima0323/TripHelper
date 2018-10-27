@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.model.Memo;
@@ -22,6 +20,7 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     List<Memo> memoList;
     ItemDeleteListener listener;
+    boolean touch=false;
     public MemoAdapter(Context context, List<Memo> memoList, ItemDeleteListener listener){
         this.context = context;
         this.memoList = memoList;
@@ -57,13 +56,19 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((MemoHolder)holder).bind(memo);
         final int pos = position;
 
-        //((MemoHolder)holder).content.setText(memo.getContent());
         ((MemoHolder) holder).binding.contentTvMemo.setText(memo.getContent());
-        //((MemoHolder) holder).binding.contentTvMemo.setInputType(EditorInfo.TYPE_CLASS_TEXT);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(touch){//열려있는 상태면
+                    touch = false;
+                    ((MemoHolder) holder).binding.contentTvMemo.setMaxLines(3);
+                    ((MemoHolder) holder).binding.contentTvMemo.setEllipsize(TextUtils.TruncateAt.END);
+                }else{//닫힌상태면
+                    touch = true;
+                    ((MemoHolder) holder).binding.contentTvMemo.setMaxLines(300);
+                }
 
             }
         });
