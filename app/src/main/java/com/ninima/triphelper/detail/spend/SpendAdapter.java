@@ -37,13 +37,11 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         ItemSpendBinding binding;
         ImageView img;
-        LinearLayout lDetail;
 
         public SpendHolder(ItemSpendBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             img = (ImageView)itemView.findViewById(R.id.img_spend);
-            lDetail = (LinearLayout)itemView.findViewById(R.id.l_detail_spend);
         }
 
         void bind(Spend spend) {
@@ -63,15 +61,14 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((SpendHolder)holder).bind(spend);
         final int pos = position;
 
-        if(spend.getRegisterDate()==null){
+        if(TextUtils.isEmpty(spend.getRegisterDate().toString())){
             ((SpendHolder) holder).binding.timeTvSpend.setText("");
         }
-        if(spend.getPlace()==null){
+        if(TextUtils.isEmpty(spend.getPlace())){
             ((SpendHolder) holder).binding.placeTvSpend.setText("");
         }
-        if(spend.getDetail()==null){
-            ((SpendHolder) holder).binding.detailTvSpend.setText("");
-           // ((SpendHolder) holder).lDetail.setVisibility(View.GONE);
+        if(TextUtils.isEmpty(spend.getDetail())){
+            ((SpendHolder) holder).binding.detailTvSpend.setVisibility(View.GONE);
         }
 
         String bi = spend.getPicUri();
