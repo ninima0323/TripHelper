@@ -94,14 +94,9 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //지출총액 확인은 어케??
         ((SpendHolder) holder).binding.timeTvSpend.setText(spend.getTitle());
         ((SpendHolder) holder).binding.priceTvSpend.setText(Float.toString(spend.getPrice()));
+        ((SpendHolder) holder).binding.currencySTvSpend.setText(spend.getCurrencyS());
         ((SpendHolder) holder).binding.categoryTvSpend.setText(spend.getCategory());
 
-
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -121,6 +116,8 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(context, EditSpendActivity.class);
                         intent.putExtra("sid", spend.getSid());
+                        intent.putExtra("isEdit", true);
+                        intent.putExtra("tid", spend.getTripId());
                         context.startActivity(intent);
                         dialog.dismiss();
                     }

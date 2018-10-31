@@ -7,29 +7,33 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.ninima.triphelper.detail.SpendDao;
+import com.ninima.triphelper.detail.spend.currency.CurrencyDao;
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.global.MyDatabase;
-import com.ninima.triphelper.main.TripDao;
 import com.ninima.triphelper.model.Spend;
 
 import java.util.List;
 
 public class SpendViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();
-    private TripDao tripDao =  database.tripDao();
+    private CurrencyDao currencyDao =  database.currencyDao();
     private SpendDao spendDao = database.spendDao();
     long tid;
     int sid;
-    LiveData<String> categories;
+    LiveData<List<CurrencyM>> currencies;
     LiveData<List<Spend>> spendList;
     LiveData<Spend> spend;
 
     public SpendViewModel(long tid){
         this.tid = tid;
         spendList = spendDao.getAllSpend(tid);
+        this.currencies = currencyDao.getAllCurrency(tid);
     }
 
-    public SpendViewModel(int sid, boolean b){
+    public SpendViewModel(int sid, long tid){
         this.sid = sid;
+        this.tid = tid;
+        this.currencies = currencyDao.getAllCurrency(tid);
         this.spend = spendDao.getOneSpend(sid);
     }
 
@@ -86,14 +90,16 @@ public class SpendViewModel extends ViewModel {
 
     static class SpendViewModelFactory2 extends ViewModelProvider.NewInstanceFactory {
         private int sid;
-        public SpendViewModelFactory2(int sid){
+        private long tid;
+        public SpendViewModelFactory2(int sid, long tid){
             this.sid = sid;
+            this.tid = tid;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return ((T)(new SpendViewModel(sid, true)));
+            return ((T)(new SpendViewModel(sid, tid)));
         }
     }
 }

@@ -27,7 +27,7 @@ public class BindingAdapters {
     }
     @BindingAdapter("floattostring")
     public static void setFloat(TextView tv, Float f) {
-        if(f == null) tv.setText(" ");
+        if(f == null) tv.setHint(" ");
         else{
             String d=Float.toString(f);
             tv.setText(d);

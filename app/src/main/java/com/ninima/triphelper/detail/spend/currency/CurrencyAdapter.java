@@ -54,36 +54,38 @@ public class CurrencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ((CurrencyHolder)holder).price.setText(currency.getPrice().toString());
         ((CurrencyHolder)holder).tag.setText(currency.getTag());
 
-        CurrencyViewModel.CurrencyViewModelFactory2 factory = new CurrencyViewModel.CurrencyViewModelFactory2(cid, true);
-        final CurrencyViewModel viewModel = ViewModelProviders.of((FragmentActivity) context, factory)
-                .get(CurrencyViewModel.class);
+        if(!currency.getTag().equals("₩")){
+            CurrencyViewModel.CurrencyViewModelFactory2 factory = new CurrencyViewModel.CurrencyViewModelFactory2(cid, true);
+            final CurrencyViewModel viewModel = ViewModelProviders.of((FragmentActivity) context, factory)
+                    .get(CurrencyViewModel.class);
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setMessage("동작을 선택하세요.");
-                dialog.setCancelable(true);
-                dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        listener.onItemClick(currency);
-                    }
-                });
-                AlertDialog.Builder builder = dialog.setNegativeButton("수정", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setMessage("동작을 선택하세요.");
+                    dialog.setCancelable(true);
+                    dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            listener.onItemClick(currency);
+                        }
+                    });
+                    AlertDialog.Builder builder = dialog.setNegativeButton("수정", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
 
-                        Dialog d = new CurrencyDialog(context, tid, cid, true, viewModel);
-                        d.show();
-                    }
-                });
-                dialog.show();
-                return false;
-            }
-        });
+                            Dialog d = new CurrencyDialog(context, tid, cid, true, viewModel);
+                            d.show();
+                        }
+                    });
+                    dialog.show();
+                    return false;
+                }
+            });
+        }
 
     }
 

@@ -36,8 +36,10 @@
             android:id="@+id/tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="필수 입력 :\n제목, 카테고리, 금액"
+            android:layout_marginEnd="16dp"
+            android:text="필수 입력 :\n제목, 카테고리, 금액, 통화"
             app:layout_constraintBottom_toBottomOf="@+id/titleEt_editSpend"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/titleEt_editSpend"
             app:layout_constraintTop_toTopOf="@+id/titleEt_editSpend" />
 
@@ -45,11 +47,9 @@
             android:id="@+id/img_editSpend"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/landscape"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/category_editSpend"
             app:layout_constraintTop_toTopOf="@+id/category_editSpend" />
 
 
@@ -57,7 +57,7 @@
             android:id="@+id/category_editSpend"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:hint="카테고리"
             android:text="@{spend.category}"
@@ -71,31 +71,46 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:hint="얼마 지출하셨나요?"
             android:inputType="numberDecimal"
             app:floattostring="@{spend.price}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/category_editSpend" />
 
+        <Spinner
+            android:id="@+id/currencySS_editSpend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/priceEt_editSpend"
+            app:layout_constraintStart_toEndOf="@+id/priceEt_editSpend"
+            app:layout_constraintTop_toTopOf="@+id/priceEt_editSpend"></Spinner>
+
         <TextView
             android:id="@+id/date_editSpend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
             android:text="2018/10/10"
             app:datetostring="@{spend.registerDate}"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/priceEt_editSpend" />
+
+        <android.support.constraint.Guideline
+            app:layout_constraintGuide_percent="0.5"
+            android:id="@+id/guideline"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/time_editSpend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="8dp"
             android:text="18:00"
             app:layout_constraintBottom_toBottomOf="@+id/date_editSpend"
-            app:layout_constraintStart_toEndOf="@+id/date_editSpend"
+            app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="@+id/date_editSpend"
             app:layout_constraintVertical_bias="0.0"
             app:timetostring="@{spend.registerDate}" />

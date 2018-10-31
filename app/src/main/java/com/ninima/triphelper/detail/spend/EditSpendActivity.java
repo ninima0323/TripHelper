@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.databinding.adapters.AdapterViewBindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -25,21 +26,26 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityEditSpendBinding;
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.model.Spend;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 public class EditSpendActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener  {
 
@@ -48,7 +54,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     ActivityEditSpendBinding binding;
     Spend spend = new Spend();
     SpendViewModel viewModel;
-    Map<String,Boolean> categoryMap;
+
+    Spinner mSpinner;
 
     Toolbar toolbar;
 
@@ -64,7 +71,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     int sid;
     boolean update = false;
 
-    String title, place, detailM, category;
+    String title, place, detailM, category, currencyS;
     Float price;
     Date registerDate;
     int nYear, nMonth, nDay, nHour, nMinute;
@@ -78,7 +85,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_spend);
         binding.setSpend(spend);
 
-
+        mSpinner = (Spinner)findViewById(R.id.currencySS_editSpend);
         img = (ImageView)findViewById(R.id.img_editSpend);
         toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
         setSupportActionBar(toolbar);
@@ -86,10 +93,11 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         toolbar.setTitleTextColor(Color.WHITE);
 
         Intent intent = getIntent();
+        update = intent.getBooleanExtra("isEdit", false);
         final long tid = intent.getLongExtra("tid",-1);
         tripId = tid;
 
-        if(tripId!=-1){
+        if(!update){
             SpendViewModel.SpendViewModelFactory factory = new SpendViewModel.SpendViewModelFactory(tid);
             viewModel = ViewModelProviders.of(this, factory)
                     .get(SpendViewModel.class);
@@ -108,11 +116,20 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
             mSecond = c.get(Calendar.SECOND);
             registerDate = c.getTime();
 
+            //mSpinner.setPrompt("통화 선택");
+
+            viewModel.currencies.observe(this, new Observer<List<CurrencyM>>() {
+                @Override
+                public void onChanged(@Nullable List<CurrencyM> currencyMS) {
+                    spinnerSetting(currencyMS, false);
+                }
+            });
+
         }else{
             update = true;
             sid = intent.getIntExtra("sid", -1);
 
-            SpendViewModel.SpendViewModelFactory2 factory = new SpendViewModel.SpendViewModelFactory2(sid);
+            SpendViewModel.SpendViewModelFactory2 factory = new SpendViewModel.SpendViewModelFactory2(sid, tid);
             viewModel = ViewModelProviders.of(this, factory)
                     .get(SpendViewModel.class);
 
@@ -126,11 +143,30 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 public void onChanged(@Nullable Spend spend) {
                     if(spend!=null){
                         updateSetting(spend);
+                        currencyS = spend.getCurrencyS();
                     }
+                }
+            });
+            viewModel.currencies.observe(this, new Observer<List<CurrencyM>>() {
+                @Override
+                public void onChanged(@Nullable List<CurrencyM> currencyMS) {
+                    spinnerSetting(currencyMS, true);
                 }
             });
         }
 
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currencyS = mSpinner.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         binding.dateEditSpend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,6 +275,29 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
             photoUri = Uri.parse(bi);
             img.setImageURI(photoUri);
         }
+
+    }
+
+    public void spinnerSetting(List<CurrencyM> clist, boolean b){
+        List<String> list = new ArrayList<String>();
+
+        if(!b) list.add("기호를 설정하세요");
+
+        int i=0;
+        for(i=0; i<clist.size(); i++){
+            list.add(clist.get(i).getTag());
+        }
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, list);
+        mSpinner.setAdapter(spinnerAdapter);
+
+        if(b){
+            int pos = 0;
+            for(pos=0; pos<clist.size(); pos++){
+                if(clist.get(pos).getTag().equals(currencyS)){
+                    mSpinner.setSelection(pos);
+                }
+            }
+        }
     }
 
     @Override
@@ -264,14 +323,15 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 spend.setTripId(tripId);
                 spend.setTitle(title);
                 spend.setPrice(price);
+                spend.setCurrencyS(currencyS);
                 spend.setCategory(category);
                 if(registerDate != null) spend.setRegisterDate(registerDate);
-                if(place != null || !place.isEmpty()) spend.setPlace(place);
-                if(detailM !=null || !detailM.isEmpty()) spend.setDetail(detailM);
+                if(TextUtils.isEmpty(place)) spend.setPlace(place);
+                if(TextUtils.isEmpty(detailM)) spend.setDetail(detailM);
 
                 if(!update){
                     if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
-                            || TextUtils.isEmpty(Float.toHexString(price))){
+                            || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
                         viewModel.insertNewSpend(spend);

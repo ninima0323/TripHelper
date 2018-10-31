@@ -9,11 +9,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ninima.triphelper.R;
+import com.ninima.triphelper.global.Converters;
 import com.ninima.triphelper.model.Memo;
 import com.ninima.triphelper.databinding.ItemMemoBinding;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -30,12 +34,12 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class MemoHolder extends RecyclerView.ViewHolder {
 
         ItemMemoBinding binding;
-        //TextView content;
+        TextView time;
 
         public MemoHolder(ItemMemoBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            //content = (TextView) itemView.findViewById(R.id.contentTv_memo);
+            time = (TextView)itemView.findViewById(R.id.time_memo);
         }
 
         void bind(Memo memo){
@@ -55,6 +59,11 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final Memo memo = memoList.get(position);
         ((MemoHolder)holder).bind(memo);
         final int pos = position;
+
+        Date date = Converters.fromTimestamp(memo.getRegisterTime());
+        SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
+        String d=transFormat.format(date);
+        ((MemoHolder) holder).time.setText(d);
 
         ((MemoHolder) holder).binding.contentTvMemo.setText(memo.getContent());
 
