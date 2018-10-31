@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -70,6 +71,7 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if(TextUtils.isEmpty(spend.getDetail())){
             ((SpendHolder) holder).binding.detailTvSpend.setVisibility(View.GONE);
         }
+
 
         String bi = spend.getPicUri();
         if(!TextUtils.isEmpty(bi)){

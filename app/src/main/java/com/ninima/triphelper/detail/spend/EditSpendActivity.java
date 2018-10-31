@@ -56,7 +56,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     ImageView img;
     private static final int PICK_FROM_CAMERA = 0000;
     private static final int PICK_FROM_ALBUM = 1111;
-    private Uri photoUri;
+    private Uri photoUri=null;
     private String currentPhotoPath;//실제 사진 파일 경로
     String mImageCaptureName;//이미지 이름
 
@@ -382,11 +382,13 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 sendPicture(data.getData()); //갤러리에서 가져오기
                 photoUri=data.getData();
                 spend.setPicUri(photoUri.toString());
+                photoUri=null;
                 break;
             case PICK_FROM_CAMERA:
                 getPictureForPhoto(); //카메라에서 가져오기
                 galleryAddPic();
                 spend.setPicUri(photoUri.toString());
+                photoUri=null;
                 break;
             default:
                 break;

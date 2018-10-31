@@ -29,10 +29,11 @@
             android:textSize="15sp" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/img_rv"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="88dp"
             android:paddingTop="2dp"
-            android:paddingBottom="2dp"></android.support.v7.widget.RecyclerView>
+            android:paddingBottom="2dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                app:datetostring="@{trip.startDate}"
                 android:textColor="@color/item_info"
                 android:textSize="11sp" />
 
@@ -74,6 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                app:datetostring="@{trip.endDate}"
                 android:textColor="@color/item_info"
                 android:textSize="11sp" />
 

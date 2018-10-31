@@ -42,14 +42,18 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.ninima.triphelper.Manager;
 import com.ninima.triphelper.R;
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.model.Trip;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
@@ -216,6 +220,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Trip t = new Trip();
                         t.setTitle(name.getText().toString());
+                        CurrencyM c = new CurrencyM();
+                        c.setTid(t.getRegisterTime());
+                        c.setTag("₩");
+                        c.setPrice(1.0f);
+                        viewModel.insertNewCurrency(c);
                         viewModel.insertNewTrip(t);
                         dialog.dismiss();
 //                        Intent addintent = new Intent(context, DetailActivity.class);

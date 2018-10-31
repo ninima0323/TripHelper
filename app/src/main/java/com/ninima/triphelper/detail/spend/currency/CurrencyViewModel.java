@@ -1,61 +1,57 @@
-package com.ninima.triphelper.detail.spend;
+package com.ninima.triphelper.detail.spend.currency;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.ninima.triphelper.detail.SpendDao;
 import com.ninima.triphelper.global.MyDatabase;
-import com.ninima.triphelper.main.TripDao;
-import com.ninima.triphelper.model.Spend;
-
 import java.util.List;
 
-public class SpendViewModel extends ViewModel {
+public class CurrencyViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();
-    private TripDao tripDao =  database.tripDao();
-    private SpendDao spendDao = database.spendDao();
+    private CurrencyDao currencyDao =  database.currencyDao();
     long tid;
-    int sid;
-    LiveData<String> categories;
-    LiveData<List<Spend>> spendList;
-    LiveData<Spend> spend;
+    int cid;
+    LiveData<CurrencyM> currency;
+    LiveData<List<CurrencyM>> currencyList;
 
-    public SpendViewModel(long tid){
+    public CurrencyViewModel(long tid){
         this.tid = tid;
-        spendList = spendDao.getAllSpend(tid);
+        currencyList = currencyDao.getAllCurrency(tid);
     }
 
-    public SpendViewModel(int sid, boolean b){
-        this.sid = sid;
-        this.spend = spendDao.getOneSpend(sid);
+    public CurrencyViewModel(int cid, boolean t){
+        this.cid = cid;
+        this.currency = currencyDao.getOneCurrency(cid);
+        Log.e("!!!!!!!!!!!", currency.equals(null)+"");
     }
 
-    void insertNewSpend(final Spend spend){
+    void insertNewCurrency(final CurrencyM currencyM){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                spendDao.insert(spend);
+                currencyDao.insert(currencyM);
             }
         });
     }
 
-    void deleteSpend(final Spend spend){
+    void deleteCurrency(final CurrencyM currencyM){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                spendDao.delete(spend);
+                currencyDao.delete(currencyM);
             }
         });
     }
 
-    void updateSpend(final Spend spend){
+    void updateCurrency(final CurrencyM currencyM){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                spendDao.update(spend);
+                currencyDao.update(currencyM);
             }
         });
     }
@@ -71,29 +67,29 @@ public class SpendViewModel extends ViewModel {
 //    }
 
 
-    static class SpendViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+    static class CurrencyViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         private long tid;
-        public SpendViewModelFactory(long tid){
+        public CurrencyViewModelFactory(long tid){
             this.tid = tid;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return ((T)(new SpendViewModel(tid)));
+            return ((T)(new CurrencyViewModel(tid)));
         }
     }
 
-    static class SpendViewModelFactory2 extends ViewModelProvider.NewInstanceFactory {
-        private int sid;
-        public SpendViewModelFactory2(int sid){
-            this.sid = sid;
+    static class CurrencyViewModelFactory2 extends ViewModelProvider.NewInstanceFactory {
+        private int cid;
+        public CurrencyViewModelFactory2(int cid, boolean b){
+            this.cid = cid;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return ((T)(new SpendViewModel(sid, true)));
+            return ((T)(new CurrencyViewModel(cid, true)));
         }
     }
 }

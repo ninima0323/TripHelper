@@ -7,8 +7,10 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.model.Trip;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +34,15 @@ public interface TripDao {
     @Query("SELECT * FROM Trip WHERE registerTime = :tid")
     LiveData<Trip> getOneTrip(long tid);
 
-    @Query("SELECT categories FROM Trip WHERE registerTime = :tid")
-    LiveData<String> getCategories(long tid);
+//    @Query("SELECT picUri FROM Spend WHERE tripId = :tid AND picUri != null ORDER BY registerDate DESC LIMIT 10")
+//    LiveData<List<String>> getRecentPics(long tid);
+//
+//    @Query("SELECT categories FROM Trip WHERE registerTime = :tid")
+//    LiveData<String> getCategories(long tid);
+//
+//    @Query("SELECT cList FROM Trip WHERE registerTime = :tid")
+//    LiveData<ArrayList<CurrencyM>> getCurrencies(long tid);
+
 
 
 }

@@ -1,11 +1,16 @@
 package com.ninima.triphelper.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Entity(indices = {@Index("registerTime")})
@@ -17,8 +22,12 @@ public class Trip {
 
     private String title, place, comment,picUri;
 
-    public Map<String, Boolean> categories;
+//    public Map<String, Boolean> categories;
 
+//    public Map<String, Float> currencies;
+
+//    @ColumnInfo(name = "cList")
+//    public ArrayList<CurrencyM> currencyList;
 //    @Ignore
 //    private float totalPrice;
 
@@ -81,12 +90,28 @@ public class Trip {
     public void setPicUri(String picUri) {
         this.picUri = picUri;
     }
-
-    public Map<String, Boolean> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Map<String, Boolean> categories) {
-        this.categories = categories;
-    }
+//
+//    public Map<String, Boolean> getCategories() {
+//        return categories;
+//    }
+//
+//    public void setCategories(Map<String, Boolean> categories) {
+//        this.categories = categories;
+//    }
+//
+//    public Map<String, Float> getCurrencies() {
+//        return currencies;
+//    }
+//
+//    public void setCurrencies(Map<String, Float> currencies) {
+//        this.currencies = currencies;
+//    }
+//
+//    public ArrayList<CurrencyM> getCurrencyList() {
+//        return currencyList;
+//    }
+//
+//    public void setCurrencyList(ArrayList<CurrencyM> currencyList) {
+//        this.currencyList = currencyList;
+//    }
 }

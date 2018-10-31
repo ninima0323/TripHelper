@@ -51,6 +51,7 @@ import com.ninima.triphelper.detail.memo.EditMemoActivity;
 import com.ninima.triphelper.detail.memo.MemoFragment;
 import com.ninima.triphelper.detail.spend.EditSpendActivity;
 import com.ninima.triphelper.detail.spend.SpendFragment;
+import com.ninima.triphelper.detail.spend.currency.EditCurrencyActivity;
 import com.ninima.triphelper.model.Trip;
 
 import java.io.File;
@@ -69,7 +70,7 @@ public class DetailActivity extends AppCompatActivity {
 
     ActivityDetailBinding binding;
 
-    TextView dateNotice;
+    TextView dateNotice, currency;
     LinearLayout dateLayout;
     long tid;
 
@@ -106,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-
+        currency = (TextView)findViewById(R.id.currency_tv);
         backImg = (ImageView)findViewById(R.id.htab_header);
         dateNotice = (TextView)findViewById(R.id.notice_tv);
         dateLayout = (LinearLayout)findViewById(R.id.l_date);
@@ -345,6 +346,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void setupTripDetail(Trip t){
@@ -384,7 +387,14 @@ public class DetailActivity extends AppCompatActivity {
             changeBarColor();
         }
 
-
+        currency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, EditCurrencyActivity.class);
+                intent.putExtra("tid", trip.getRegisterTime());
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager) {

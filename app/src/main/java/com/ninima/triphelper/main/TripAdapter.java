@@ -1,16 +1,24 @@
 package com.ninima.triphelper.main;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ninima.triphelper.BR;
+import com.ninima.triphelper.R;
 import com.ninima.triphelper.detail.DetailActivity;
+import com.ninima.triphelper.detail.SpendDao;
+import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.model.Trip;
 
 import java.util.List;
@@ -21,6 +29,10 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     List<Trip> tripList;
     ItemDeleteListener listener;
+
+    MyDatabase database = MyDatabase.instance();
+    //TripDao tripDao =  database.tripDao();
+    SpendDao spendDao = database.spendDao();
     public TripAdapter(Context context, List<Trip> tripList, ItemDeleteListener listener){
         this.context = context;
         this.tripList = tripList;
@@ -28,11 +40,18 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class TripHolder extends RecyclerView.ViewHolder {
+//
+//        RecyclerView imgRv;
 
         ItemTripBinding binding;
         public TripHolder(ItemTripBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+//
+//            imgRv = (RecyclerView)itemView.findViewById(R.id.img_rv);
+//            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+//            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//            imgRv.setLayoutManager(layoutManager);
         }
 
         void bind(Trip trip) {
@@ -51,6 +70,16 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final Trip trip = tripList.get(position);
         ((TripHolder)holder).bind(trip);
         final int pos = position;
+
+//        spendDao.getPicList(trip.getRegisterTime()).observe((LifecycleOwner) context, new Observer<List<String>>() {
+//            @Override
+//            public void onChanged(@Nullable List<String> strings) {
+//                List<String> imgList = strings;
+//                TripImgAdapter mAdapter = new TripImgAdapter(context, imgList);
+//                ((TripHolder)holder).imgRv.setAdapter(mAdapter);
+//            }
+//        });
+
 
         if(trip.getStartDate()==null){
             ((TripHolder) holder).binding.tv1Trip.setText("여행 날짜를 입력해주세요.");

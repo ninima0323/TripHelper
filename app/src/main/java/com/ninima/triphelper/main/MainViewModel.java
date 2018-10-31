@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
+import com.ninima.triphelper.detail.spend.currency.CurrencyDao;
+import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.model.Trip;
 
@@ -13,6 +15,8 @@ import java.util.List;
 public class MainViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();
     private TripDao tripDao =  database.tripDao();
+    private CurrencyDao currencyDao = database.currencyDao();
+
     LiveData<Trip> trip;//이렇게 해 두면 디비가 바뀔 때마다 trip 에 있는 값이 바뀜
     //LiveData 에 있는 값을 확인하려면 trip.getValue()로 가져옴
     //LiveData 는 백그라운드 작업에서 할 필요 없이 알아서 백그라운드 쓰레드로 돌려줘서 쓰레드 처리 할 필요는 없음
@@ -23,6 +27,15 @@ public class MainViewModel extends ViewModel {
     public MainViewModel(){
         trip = tripDao.getRecentOne();
         tripList = tripDao.getAllTrip();
+    }
+
+    void insertNewCurrency(final CurrencyM currencyM){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                currencyDao.insert(currencyM);
+            }
+        });
     }
 
     void insertNewTrip(final Trip trip){

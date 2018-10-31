@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:id="@+id/dialView"
+    android:padding="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/title_dial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:text="환율 추가" />
+
+    <EditText
+        android:id="@+id/tagEt_curDial"
+        android:hint="USD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="left"
+        app:layout_constraintTop_toBottomOf="@id/title_dial"/>
+
+    <EditText
+        android:id="@+id/priceEt_curDial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="left"
+        app:layout_constraintTop_toBottomOf="@id/tagEt_curDial" />
+
+    <Button
+        android:id="@+id/addBtn_curDial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_gravity="right"
+        android:text="추가"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/priceEt_curDial"/>
+
+</android.support.constraint.ConstraintLayout>

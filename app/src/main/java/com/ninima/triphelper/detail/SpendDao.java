@@ -30,4 +30,7 @@ public interface SpendDao {
 
     @Query("SELECT * FROM Spend WHERE sid = :sid")
     LiveData<Spend> getOneSpend(int sid);
+
+    @Query("SELECT picUri FROM Spend WHERE tripId = :tid AND picUri != null ORDER BY registerDate DESC LIMIT 10")
+    LiveData<List<String>> getPicList(long tid);
 }
