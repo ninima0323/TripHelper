@@ -6,10 +6,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.ninima.triphelper.detail.CategoryDao;
 import com.ninima.triphelper.detail.SpendDao;
 import com.ninima.triphelper.detail.spend.currency.CurrencyDao;
 import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.global.MyDatabase;
+import com.ninima.triphelper.model.CategoryM;
 import com.ninima.triphelper.model.Spend;
 
 import java.util.List;
@@ -18,8 +20,10 @@ public class SpendViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();
     private CurrencyDao currencyDao =  database.currencyDao();
     private SpendDao spendDao = database.spendDao();
+    private CategoryDao categoryDao = database.catagoryDao();
     long tid;
     int sid;
+    LiveData<List<CategoryM>> categoris;
     LiveData<List<CurrencyM>> currencies;
     LiveData<List<Spend>> spendList;
     LiveData<Spend> spend;
@@ -28,12 +32,14 @@ public class SpendViewModel extends ViewModel {
         this.tid = tid;
         spendList = spendDao.getAllSpend(tid);
         this.currencies = currencyDao.getAllCurrency(tid);
+        this.categoris = categoryDao.getAllCategory(tid);
     }
 
     public SpendViewModel(int sid, long tid){
         this.sid = sid;
         this.tid = tid;
         this.currencies = currencyDao.getAllCurrency(tid);
+        this.categoris = categoryDao.getAllCategory(tid);
         this.spend = spendDao.getOneSpend(sid);
     }
 
@@ -60,6 +66,15 @@ public class SpendViewModel extends ViewModel {
             @Override
             public void run() {
                 spendDao.update(spend);
+            }
+        });
+    }
+
+    void insertNewCategory(final CategoryM categoryM){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                categoryDao.insert(categoryM);
             }
         });
     }

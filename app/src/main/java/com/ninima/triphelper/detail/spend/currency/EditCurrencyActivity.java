@@ -77,22 +77,6 @@ public class EditCurrencyActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, factory)
                 .get(CurrencyViewModel.class);
 
-//        viewModel.currencyList.observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-////                Map<String, Float> m = Converters.fromCurrencyString(s);
-////                Set mSet = m.entrySet();
-////                Iterator iterator = mSet.iterator();
-////                while(iterator.hasNext()){
-////                    Map.Entry entry = (Map.Entry)iterator.next();
-////                    String key = (String)entry.getKey();
-////                    Float value = (Float)entry.getValue();
-////                    //test.setText(value+"\t"+key);
-////                }
-//
-//                currencies = m;
-//            }
-//        });
         viewModel.currencyList.observe(this, new Observer<List<CurrencyM>>() {
             @Override
             public void onChanged(@Nullable List<CurrencyM> currencyMS) {
@@ -120,36 +104,6 @@ public class EditCurrencyActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_add:
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("환율 추가");
-//                builder.setMessage("ex) US 1200");
-//                builder.setCancelable(false);
-//                @SuppressLint("ResourceType") View v = (View)findViewById(R.layout.dialog_currency);
-//                builder.setView(v);
-//                final EditText tag = v.findViewById(R.id.tagEt_curDial);
-//                final EditText price = v.findViewById(R.id.priceEt_curDial);
-//
-//                price.setInputType(InputType.TYPE_CLASS_NUMBER
-//                        | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-//                tag.setHint("US");
-//                price.setHint("1200");
-//
-//                builder.setPositiveButton("추가", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        CurrencyM c = new CurrencyM();
-//                        c.setTid(tid);
-//                        c.setTag(tag.getText().toString());
-//                        c.setPrice(Float.parseFloat(price.getText().toString()));
-//                        viewModel.insertNewCurrency(c);
-//                        dialog.dismiss();
-//                    }
-//                });
-//                builder.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                builder.show();
                 Dialog dialog = new CurrencyDialog(context, tid, -1,false, viewModel);
                 //Dialog dialog = new CurrencyDialog(context);
                 dialog.show();
@@ -158,88 +112,5 @@ public class EditCurrencyActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    public class CurrencyDialog extends Dialog {
-//        EditText tag,price;
-//        Button addbtn;
-//        boolean istag = false , isprice = false;
-//
-//        public CurrencyDialog(final Context context) {
-//            super(context);
-//
-//            // 다이얼로그 외부 화면 흐리게 표현
-////            WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
-////            lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-////            lpWindow.dimAmount = 0.8f;
-////            getWindow().setAttributes(lpWindow);
-//
-//            //getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));  //다이얼로그의 배경을 투명으로 만듭니다.
-//            setContentView(R.layout.dialog_currency);     //다이얼로그에서 사용할 레이아웃입니다.
-//            tag = (EditText) findViewById(R.id.tagEt_curDial);
-//            price = (EditText) findViewById(R.id.priceEt_curDial);
-//            price.setHint("12246.5");
-//
-//            tag.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//                    if(TextUtils.isEmpty(tag.getText())){
-//                        istag = false;
-//                    }else{//제대로된 값이 입력됨
-//                        istag = true;
-//                    }
-//                }
-//            });
-//
-//            price.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//                    if(TextUtils.isEmpty(price.getText())){
-//                        isprice = false;
-//                    }else{//제대로된 값이 입력됨
-//                        isprice = true;
-//                    }
-//                }
-//            });
-//
-//            addbtn = (Button) findViewById(R.id.addBtn_curDial);
-//            addbtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if(istag && isprice){
-//                        CurrencyM c = new CurrencyM();
-//                        c.setTid(tid);
-//                        c.setTag(tag.getText().toString());
-//                        c.setPrice(Float.parseFloat(price.getText().toString()));
-//                        viewModel.insertNewCurrency(c);
-//                        dismiss();
-//                    }else{
-//                        Toast.makeText(context, "두 항목을 입력하지 않아 추가되지 않습니다.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-//
-//        }
-//
-//    }
 
 }

@@ -20,7 +20,7 @@ public interface CurrencyDao {
     @Update
     void update(CurrencyM currencyM);
 
-    @Query("SELECT * FROM CurrencyM WHERE tid = :tid ORDER BY tag DESC")
+    @Query("SELECT * FROM CurrencyM WHERE tid = :tid ORDER BY cid")
     LiveData<List<CurrencyM>> getAllCurrency(long tid);
 
     @Query("SELECT * FROM CURRENCYM WHERE cid = :cid")

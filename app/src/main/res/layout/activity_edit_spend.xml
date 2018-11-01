@@ -50,20 +50,30 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/landscape"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/category_editSpend" />
+            app:layout_constraintTop_toTopOf="@+id/categoryS_editSpend" />
 
 
-        <EditText
-            android:id="@+id/category_editSpend"
-            android:layout_width="200dp"
+        <Spinner
+            android:id="@+id/categoryS_editSpend"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:hint="카테고리"
-            android:text="@{spend.category}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleEt_editSpend" />
+            app:layout_constraintTop_toBottomOf="@+id/titleEt_editSpend"></Spinner>
 
+        <EditText
+            android:id="@+id/categoryEt_editSpend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="카테고리 입력란"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/priceEt_editSpend"
+            app:layout_constraintStart_toStartOf="@id/categoryS_editSpend"
+            app:layout_constraintEnd_toEndOf="@id/categoryS_editSpend"
+            app:layout_constraintTop_toBottomOf="@+id/categoryS_editSpend"/>
 
         <EditText
             android:id="@+id/priceEt_editSpend"
@@ -74,7 +84,7 @@
             android:inputType="numberDecimal"
             app:floattostring="@{spend.price}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/category_editSpend" />
+            app:layout_constraintTop_toBottomOf="@+id/categoryS_editSpend"/>
 
         <Spinner
             android:id="@+id/currencySS_editSpend"

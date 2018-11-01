@@ -105,13 +105,17 @@ public class EditMemoActivity extends AppCompatActivity {
                         finish();
                     }
                 }else{
-                    memo.setRegisterTime(mid);
-                    memo.setTripId(tid);
-                    memo.setTitleDate(titleD);
-                    memo.setContent(contentEt.getText().toString());
-                    viewModel.updateMemo(memo);
-                    Toast.makeText(this, "메모가 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if(TextUtils.isEmpty(contentEt.getText())){
+                        Toast.makeText(this, "입력 내용이 없어 메모가 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        memo.setRegisterTime(mid);
+                        memo.setTripId(tid);
+                        memo.setTitleDate(titleD);
+                        memo.setContent(contentEt.getText().toString());
+                        viewModel.updateMemo(memo);
+                        Toast.makeText(this, "메모가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
                 return true;
 

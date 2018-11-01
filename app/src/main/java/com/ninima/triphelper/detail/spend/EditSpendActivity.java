@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.databinding.adapters.AdapterViewBindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -22,13 +21,16 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
@@ -37,6 +39,7 @@ import android.widget.Toast;
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.databinding.ActivityEditSpendBinding;
 import com.ninima.triphelper.detail.spend.currency.CurrencyM;
+import com.ninima.triphelper.model.CategoryM;
 import com.ninima.triphelper.model.Spend;
 
 import java.io.File;
@@ -55,8 +58,9 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     Spend spend = new Spend();
     SpendViewModel viewModel;
 
-    Spinner mSpinner;
-
+    List<String> categoriesList;
+    Spinner currencySpinner, categorySpinner;
+    EditText categoryAddEt;
     Toolbar toolbar;
 
     Bitmap bitmap;
@@ -85,7 +89,9 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_spend);
         binding.setSpend(spend);
 
-        mSpinner = (Spinner)findViewById(R.id.currencySS_editSpend);
+        categoryAddEt = (EditText)findViewById(R.id.categoryEt_editSpend);
+        categorySpinner = (Spinner)findViewById(R.id.categoryS_editSpend);
+        currencySpinner = (Spinner)findViewById(R.id.currencySS_editSpend);
         img = (ImageView)findViewById(R.id.img_editSpend);
         toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
         setSupportActionBar(toolbar);
@@ -121,7 +127,14 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
             viewModel.currencies.observe(this, new Observer<List<CurrencyM>>() {
                 @Override
                 public void onChanged(@Nullable List<CurrencyM> currencyMS) {
-                    spinnerSetting(currencyMS, false);
+                    currencySpinnerSetting(currencyMS, false);
+                }
+            });
+
+            viewModel.categoris.observe(this, new Observer<List<CategoryM>>() {
+                @Override
+                public void onChanged(@Nullable List<CategoryM> categoryMS) {
+                    categorySpinnerSetting(categoryMS, false);
                 }
             });
 
@@ -144,22 +157,66 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                     if(spend!=null){
                         updateSetting(spend);
                         currencyS = spend.getCurrencyS();
+                        category = spend.getCategory();
                     }
                 }
             });
+
             viewModel.currencies.observe(this, new Observer<List<CurrencyM>>() {
                 @Override
                 public void onChanged(@Nullable List<CurrencyM> currencyMS) {
-                    spinnerSetting(currencyMS, true);
+                    currencySpinnerSetting(currencyMS, true);
+                }
+            });
+
+            viewModel.categoris.observe(this, new Observer<List<CategoryM>>() {
+                @Override
+                public void onChanged(@Nullable List<CategoryM> categoryMS) {
+                    categorySpinnerSetting(categoryMS, true);
                 }
             });
         }
 
 
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currencyS = mSpinner.getItemAtPosition(position).toString();
+                category = categorySpinner.getItemAtPosition(position).toString();
+                if(category.equals("직접 추가")){
+                    categoryAddEt.setVisibility(View.VISIBLE);
+                    categoryAddEt.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            category = categoryAddEt.getText().toString();
+                        }
+                    });
+                }else{
+                    categoryAddEt.setVisibility(View.GONE);
+                }
+                if(category.equals("카테고리를 설정하세요")) category = null;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currencyS = currencySpinner.getItemAtPosition(position).toString();
+                if(currencyS.equals("기호를 설정하세요")) currencyS = null;
             }
 
             @Override
@@ -259,9 +316,10 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
         registerDate = s.getRegisterDate();
         binding.priceEtEditSpend.setText(Float.toString(s.getPrice()));
         binding.titleEtEditSpend.setText(s.getTitle());
-        binding.categoryEditSpend.setText(s.getCategory());
         binding.placeEtEditSpend.setText(s.getPlace());
         binding.detailEtEditSpend.setText(s.getDetail());
+        category = s.getCategory();
+        currencyS = s.getCurrencyS();
 
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = transFormat.format(registerDate);
@@ -278,24 +336,64 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
 
     }
 
-    public void spinnerSetting(List<CurrencyM> clist, boolean b){
+    public void currencySpinnerSetting(List<CurrencyM> clist, boolean b){
         List<String> list = new ArrayList<String>();
-
         if(!b) list.add("기호를 설정하세요");
 
         int i=0;
         for(i=0; i<clist.size(); i++){
             list.add(clist.get(i).getTag());
         }
+
         ArrayAdapter spinnerAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, list);
-        mSpinner.setAdapter(spinnerAdapter);
+        currencySpinner.setAdapter(spinnerAdapter);
 
         if(b){
             int pos = 0;
-            for(pos=0; pos<clist.size(); pos++){
-                if(clist.get(pos).getTag().equals(currencyS)){
-                    mSpinner.setSelection(pos);
+            for(pos=0; pos<list.size(); pos++){
+                if(list.get(pos).equals(currencyS)){
+                    currencySpinner.setSelection(pos);
+                    return;
                 }
+            }
+            if(pos == list.size()){
+                Toast.makeText(context, "삭제된 통화, 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
+                currencyS = "₩";
+                currencySpinner.setSelection(0);
+            }
+        }
+    }
+
+    public void categorySpinnerSetting(List<CategoryM> clist, boolean b){
+        List<String> list = new ArrayList<String>();
+        if(!b) list.add("카테고리를 설정하세요");
+        list.add("직접 추가");
+        int i=0;
+        for(i=0; i<clist.size(); i++){
+            list.add(clist.get(i).getCategory());
+        }
+
+        if(!b) {
+            categoriesList = list.subList(2, list.size());
+        }else{
+            categoriesList = list.subList(1, list.size());
+        }
+
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, list);
+        categorySpinner.setAdapter(spinnerAdapter);
+
+        if(b){
+            int pos = 0;
+            for(pos=0; pos<list.size(); pos++){
+                if(list.get(pos).equals(category)){
+                    categorySpinner.setSelection(pos);
+                    return;
+                }
+            }
+            if(pos == list.size()){
+                Toast.makeText(context, "삭제된 카테고리입니다.", Toast.LENGTH_SHORT).show();
+                category = "";
+                categorySpinner.setSelection(0);
             }
         }
     }
@@ -316,7 +414,6 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 return true;
             case R.id.action_save:
                 title = binding.titleEtEditSpend.getText().toString();
-                category = binding.categoryEditSpend.getText().toString();
                 price = Float.parseFloat(binding.priceEtEditSpend.getText().toString());
                 place = binding.placeEtEditSpend.getText().toString();
                 detailM = binding.detailEtEditSpend.getText().toString();
@@ -334,16 +431,33 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                             || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
+                        if(!categoriesList.contains(category)){
+                            CategoryM categoryM = new CategoryM();
+                            categoryM.setCategory(category);
+                            categoryM.setTid(tripId);
+                            viewModel.insertNewCategory(categoryM);
+                        }
                         viewModel.insertNewSpend(spend);
                         Toast.makeText(this, "지출 내역이 저장되었습니다.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
 
                 }else{
-                    spend.setSid(sid);
-                    viewModel.updateSpend(spend);
-                    Toast.makeText(this, "지출 내역이 수정되었습니다.", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
+                            || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
+                        Toast.makeText(this, "필수항목 미기입으로 지출 내역이 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }else {
+                        if(!categoriesList.contains(category)){
+                            CategoryM categoryM = new CategoryM();
+                            categoryM.setCategory(category);
+                            categoryM.setTid(tripId);
+                            viewModel.insertNewCategory(categoryM);
+                        }
+                        spend.setSid(sid);
+                        viewModel.updateSpend(spend);
+                        Toast.makeText(this, "지출 내역이 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
 
                 return true;
