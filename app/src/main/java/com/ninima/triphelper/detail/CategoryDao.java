@@ -25,7 +25,7 @@ public interface CategoryDao {
     @Query("SELECT * FROM CategoryM WHERE tid = :tid ORDER BY category")
     LiveData<List<CategoryM>> getAllCategory(long tid);
 
-    @Query("SELECT * FROM CategoryM WHERE category = :c")
-    LiveData<CategoryM > getOneCategory(String c);
+    @Query("SELECT * FROM CategoryM WHERE categoryId = :id")
+    LiveData<CategoryM > getOneCategory(int id);
 
 }

@@ -9,10 +9,10 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity
 public class CategoryM {
-    @PrimaryKey
-    @NonNull
-    private String category;
+    @PrimaryKey(autoGenerate = true)
+    private int categoryId;
 
+    private String category;
     private boolean isSelected;
     private long tid;
 
@@ -20,6 +20,14 @@ public class CategoryM {
         this.category = "기타";
         this.isSelected = true;
         this.tid=-1;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategory() {

@@ -72,7 +72,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     String mImageCaptureName;//이미지 이름
 
     long tripId;
-    int sid;
+    int sid, categoryId;
     boolean update = false;
 
     String title, place, detailM, category, currencyS;
@@ -387,6 +387,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
             for(pos=0; pos<list.size(); pos++){
                 if(list.get(pos).equals(category)){
                     categorySpinner.setSelection(pos);
+                    categoryId = clist.get(pos-1).getCategoryId();
                     return;
                 }
             }
@@ -452,6 +453,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                     }else {
                         if(!categoriesList.contains(category)){
                             CategoryM categoryM = new CategoryM();
+                            categoryM.setCategoryId(categoryId);
                             categoryM.setCategory(category);
                             categoryM.setTid(tripId);
                             viewModel.insertNewCategory(categoryM);

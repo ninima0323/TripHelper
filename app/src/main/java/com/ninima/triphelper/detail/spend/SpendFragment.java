@@ -3,8 +3,10 @@ package com.ninima.triphelper.detail.spend;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,9 +16,11 @@ import android.view.ViewGroup;
 
 import com.ninima.triphelper.R;
 import com.ninima.triphelper.detail.RecyclerSectionItemDecoration;
+import com.ninima.triphelper.model.CategoryM;
 import com.ninima.triphelper.model.Spend;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
@@ -33,6 +37,12 @@ public class SpendFragment extends Fragment {
     SpendAdapter mAdapter;
     List<Spend> spendList;
     RecyclerSectionItemDecoration sectionItemDecoration;
+
+    FloatingActionButton fab;
+    RecyclerView rvFab;
+    FabAdapter fabAdapter;
+    boolean isFabClicked = false;
+    Context context = getContext();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +79,32 @@ public class SpendFragment extends Fragment {
             }
         });
         rv.setAdapter(mAdapter);
+
+        rvFab = (RecyclerView)view.findViewById(R.id.fab_rv);
+        viewModel.categoris.observe(this, new Observer<List<CategoryM>>() {
+            @Override
+            public void onChanged(@Nullable List<CategoryM> categoryMS) {
+
+                fabAdapter = new FabAdapter(context,categoryMS, viewModel, tid);
+                rvFab.setAdapter(fabAdapter);
+            }
+        });
+        rvFab.bringToFront();
+        rvFab.setVisibility(View.INVISIBLE);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFabClicked){//트루인상태면 지금 보여지고 있는 상태, 이때 누르면 폴스로 바꾸고 없앰
+                    isFabClicked = false;
+                    rvFab.setVisibility(View.INVISIBLE);
+                }else{//폴스인상태에서 누르면 트루로 바뀌고 화면 뜸
+                    isFabClicked = true;
+                    rvFab.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
         return view;
     }

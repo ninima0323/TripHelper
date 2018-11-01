@@ -79,6 +79,15 @@ public class SpendViewModel extends ViewModel {
         });
     }
 
+    void updateCategory(final CategoryM categoryM){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                categoryDao.update(categoryM);
+            }
+        });
+    }
+
 //    void getCategories(final long tid){
 //        AsyncTask.execute(new Runnable() {
 //            @Override
