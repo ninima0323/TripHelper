@@ -91,7 +91,10 @@ public class EditMemoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(this, "메모가 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+                if(!update)
+                    Toast.makeText(this, "메모가 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "메모가 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
                 finish();
                 return true;
             case R.id.action_save:
@@ -125,7 +128,10 @@ public class EditMemoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "메모가 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+        if(!update)
+            Toast.makeText(this, "메모가 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "메모가 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
     }
 }

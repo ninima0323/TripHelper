@@ -1,10 +1,8 @@
 package com.ninima.triphelper.detail.spend.currency;
 
 import android.app.Dialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,11 +18,13 @@ public class CurrencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     List<CurrencyM> currencies;
     long tid;
+    CurrencyViewModel viewModel;
     ItemDeleteListener listener;
-    public CurrencyAdapter(Context context, List<CurrencyM> List, long tid, com.ninima.triphelper.detail.spend.currency.ItemDeleteListener listener){
+    public CurrencyAdapter(Context context, List<CurrencyM> List, CurrencyViewModel viewModel, long tid, com.ninima.triphelper.detail.spend.currency.ItemDeleteListener listener){
         this.context = context;
         this.currencies = List;
         this.tid = tid;
+        this.viewModel = viewModel;
         this.listener = listener;
     }
 
@@ -49,15 +49,11 @@ public class CurrencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final CurrencyM currency = currencies.get(position);
         final int pos = position;
-        final int cid = currency.getCid();
 
         ((CurrencyHolder)holder).price.setText(currency.getPrice().toString());
         ((CurrencyHolder)holder).tag.setText(currency.getTag());
 
         if(!currency.getTag().equals("₩")){
-            CurrencyViewModel.CurrencyViewModelFactory2 factory = new CurrencyViewModel.CurrencyViewModelFactory2(cid, true);
-            final CurrencyViewModel viewModel = ViewModelProviders.of((FragmentActivity) context, factory)
-                    .get(CurrencyViewModel.class);
 
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -76,8 +72,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-
-                            Dialog d = new CurrencyDialog(context, tid, cid, true, viewModel);
+                            Dialog d = new CurrencyDialog(context, tid, pos, true, viewModel);
                             d.show();
                         }
                     });

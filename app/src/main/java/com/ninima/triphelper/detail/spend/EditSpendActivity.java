@@ -357,7 +357,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 }
             }
             if(pos == list.size()){
-                Toast.makeText(context, "삭제된 통화, 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "환율이 삭제되어 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
                 currencyS = "₩";
                 currencySpinner.setSelection(0);
             }
@@ -409,7 +409,10 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(this, "지출 내역이 저장되지 않습니다", Toast.LENGTH_SHORT).show();
+                if(!update)
+                    Toast.makeText(this, "지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "지출 내역이 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
                 finish();
                 return true;
             case R.id.action_save:
@@ -468,7 +471,10 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+        if(!update)
+            Toast.makeText(this, "지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "지출 내역이 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
     }
 

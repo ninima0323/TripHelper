@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.ninima.triphelper.global.MyDatabase;
 import java.util.List;
@@ -14,19 +13,11 @@ public class CurrencyViewModel extends ViewModel {
     private MyDatabase database = MyDatabase.instance();
     private CurrencyDao currencyDao =  database.currencyDao();
     long tid;
-    int cid;
-    LiveData<CurrencyM> currency;
     LiveData<List<CurrencyM>> currencyList;
 
     public CurrencyViewModel(long tid){
         this.tid = tid;
         currencyList = currencyDao.getAllCurrency(tid);
-    }
-
-    public CurrencyViewModel(int cid, boolean t){
-        this.cid = cid;
-        this.currency = currencyDao.getOneCurrency(cid);
-        Log.e("!!!!!!!!!!!", currency.equals(null)+"");
     }
 
     void insertNewCurrency(final CurrencyM currencyM){
@@ -77,19 +68,6 @@ public class CurrencyViewModel extends ViewModel {
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             return ((T)(new CurrencyViewModel(tid)));
-        }
-    }
-
-    static class CurrencyViewModelFactory2 extends ViewModelProvider.NewInstanceFactory {
-        private int cid;
-        public CurrencyViewModelFactory2(int cid, boolean b){
-            this.cid = cid;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return ((T)(new CurrencyViewModel(cid, true)));
         }
     }
 }

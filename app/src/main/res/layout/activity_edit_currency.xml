@@ -53,6 +53,7 @@
         android:textColor="@color/item_title"
         android:text="환율"
         android:layout_marginStart="8dp"
+        android:inputType="numberDecimal"
         android:textSize="16sp"
         app:layout_constraintTop_toTopOf="@id/taghelp"
         app:layout_constraintBottom_toBottomOf="@id/taghelp"

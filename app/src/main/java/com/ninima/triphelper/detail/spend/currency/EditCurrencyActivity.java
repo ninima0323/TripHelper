@@ -64,18 +64,18 @@ public class EditCurrencyActivity extends AppCompatActivity {
 
 //        final TextView test = (TextView)findViewById(R.id.textView);
 
+        CurrencyViewModel.CurrencyViewModelFactory factory = new CurrencyViewModel.CurrencyViewModelFactory(tid);
+        viewModel = ViewModelProviders.of(this, factory)
+                .get(CurrencyViewModel.class);
+
         rv = (RecyclerView)findViewById(R.id.currency_rv);
-        mAdapter = new CurrencyAdapter(this, currencies, tid, new ItemDeleteListener() {
+        mAdapter = new CurrencyAdapter(this, currencies, viewModel, tid, new ItemDeleteListener() {
             @Override
             public void onItemClick(CurrencyM currencyM) {
                 viewModel.deleteCurrency(currencyM);
             }
         });
         rv.setAdapter(mAdapter);
-
-        CurrencyViewModel.CurrencyViewModelFactory factory = new CurrencyViewModel.CurrencyViewModelFactory(tid);
-        viewModel = ViewModelProviders.of(this, factory)
-                .get(CurrencyViewModel.class);
 
         viewModel.currencyList.observe(this, new Observer<List<CurrencyM>>() {
             @Override
@@ -105,7 +105,6 @@ public class EditCurrencyActivity extends AppCompatActivity {
                 return true;
             case R.id.action_add:
                 Dialog dialog = new CurrencyDialog(context, tid, -1,false, viewModel);
-                //Dialog dialog = new CurrencyDialog(context);
                 dialog.show();
                 return true ;
 

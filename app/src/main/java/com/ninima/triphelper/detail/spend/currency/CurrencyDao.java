@@ -23,7 +23,4 @@ public interface CurrencyDao {
     @Query("SELECT * FROM CurrencyM WHERE tid = :tid ORDER BY cid")
     LiveData<List<CurrencyM>> getAllCurrency(long tid);
 
-    @Query("SELECT * FROM CURRENCYM WHERE cid = :cid")
-    LiveData<CurrencyM> getOneCurrency(int cid);
-
 }

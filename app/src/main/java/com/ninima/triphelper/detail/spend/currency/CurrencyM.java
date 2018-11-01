@@ -2,14 +2,19 @@ package com.ninima.triphelper.detail.spend.currency;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 
 @Entity
 public class CurrencyM {
     @PrimaryKey(autoGenerate = true)
-    public int cid;
+    @NonNull
+    private int cid;
 
     public String tag;
+
     public Float price;
     public long tid;
 
@@ -17,7 +22,7 @@ public class CurrencyM {
 //    public int postCode;
 
     public CurrencyM(){
-        tag = null;
+        tag = "₩";
         price = null;
         tid = -1;
     }
@@ -46,11 +51,12 @@ public class CurrencyM {
         this.tid = tid;
     }
 
+    @NonNull
     public int getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(@NonNull int cid) {
         this.cid = cid;
     }
 }

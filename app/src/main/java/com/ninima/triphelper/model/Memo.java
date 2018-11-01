@@ -1,18 +1,25 @@
 package com.ninima.triphelper.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Calendar;
 import java.util.Date;
 
-@Entity
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(foreignKeys = @ForeignKey(entity = Trip.class,
+        parentColumns = "registerTime",
+        childColumns = "tripId",
+        onDelete = CASCADE))
 public class Memo {
     @PrimaryKey
     private long registerTime;
 
     private Date titleDate;
     private String content;
+
     private long tripId;
 
     public Memo(){

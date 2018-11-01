@@ -19,17 +19,20 @@ import android.widget.Toast;
 
 import com.ninima.triphelper.R;
 
+import java.util.List;
+
 public class CurrencyDialog extends Dialog {
     EditText tag,price;
     TextView title;
     Button addbtn;
     boolean istag = false , isprice = false;
-    CurrencyM c = new CurrencyM();
+    CurrencyM c ;
 
-    public CurrencyDialog(final Context context, final long tid, final int cid,
+    public CurrencyDialog(final Context context, final long tid, final int pos,
                           final boolean edit, CurrencyViewModel viewModel) {
         super(context);
 
+        c = new CurrencyM();
         // 다이얼로그 외부 화면 흐리게 표현
         WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
         lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
@@ -41,19 +44,19 @@ public class CurrencyDialog extends Dialog {
         title = (TextView)findViewById(R.id.title_dial);
         tag = (EditText) findViewById(R.id.tagEt_curDial);
         price = (EditText) findViewById(R.id.priceEt_curDial);
+        addbtn = (Button) findViewById(R.id.addBtn_curDial);
         price.setHint("12246.5");
 
         if(edit){//수정인경우
-            CurrencyViewModel.CurrencyViewModelFactory2 factory = new CurrencyViewModel.CurrencyViewModelFactory2(cid, true);
-            viewModel = ViewModelProviders.of((FragmentActivity) context, factory)
-                    .get(CurrencyViewModel.class);
-            viewModel.currency.observe((LifecycleOwner) context, new Observer<CurrencyM>() {
+            viewModel.currencyList.observe((LifecycleOwner) context, new Observer<List<CurrencyM>>() {
                 @Override
-                public void onChanged(@Nullable CurrencyM currencyM) {
-                    c = currencyM;
-                    tag.setText(currencyM.getTag());
-                    price.setText(currencyM.getPrice().toString());
-                    title.setText("환율 수정");
+                public void onChanged(@Nullable List<CurrencyM> currencyMS) {
+                    addbtn.setText("수정");
+                    c = currencyMS.get(pos);
+                    tag.setText(c.getTag());
+                    price.setText(c.getPrice().toString());
+                    istag = true;
+                    isprice = true;
                 }
             });
         }
@@ -100,7 +103,6 @@ public class CurrencyDialog extends Dialog {
             }
         });
 
-        addbtn = (Button) findViewById(R.id.addBtn_curDial);
         final CurrencyViewModel finalViewModel = viewModel;
         addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +120,11 @@ public class CurrencyDialog extends Dialog {
                     }
                     dismiss();
                 }else{
-                    Toast.makeText(context, "모든 항목을 입력하지 않아 추가되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    if(edit){
+                        Toast.makeText(context, "모든 항목을 입력하지 않아 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "모든 항목을 입력하지 않아 추가되지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

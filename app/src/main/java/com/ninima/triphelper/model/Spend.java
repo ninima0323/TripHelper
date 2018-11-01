@@ -5,14 +5,14 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
+
 import java.util.Calendar;
 import java.util.Date;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-//@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "registerTime", childColumns = "tripId",
-//        onDelete = CASCADE))
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Trip.class, parentColumns = "registerTime", childColumns = "tripId",
+        onDelete = CASCADE))
 public class Spend {
     @PrimaryKey(autoGenerate = true)
     private int sid;
@@ -21,8 +21,12 @@ public class Spend {
     private long tripId;
 
     private Date registerDate = Calendar.getInstance().getTime(), titleDate;  //레지스터가 지출한 시각을 나타내서 분초 다 기록, 타이틀은 스티키헤더위한것으로 자정으로기록
-    private String category, title, detail, place, picUri, currencyS;
+    private String title, detail, place, picUri;
     private float price;
+
+    private String category;
+
+    private String currencyS ;
 
     public Date getRegisterDate() {
         return registerDate;
