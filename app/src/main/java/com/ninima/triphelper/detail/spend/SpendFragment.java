@@ -87,6 +87,14 @@ public class SpendFragment extends Fragment {
 
                 fabAdapter = new FabAdapter(context,categoryMS, viewModel, tid);
                 rvFab.setAdapter(fabAdapter);
+                List<String> list = new ArrayList<>();
+                int i;
+                for(i=0; i<categoryMS.size();i++){
+                    if(categoryMS.get(i).isSelected()){
+                        list.add(categoryMS.get(i).getCategory());
+                    }
+                }
+                viewModel.setSelectedSpends(tid, list);
             }
         });
         rvFab.bringToFront();
@@ -105,6 +113,14 @@ public class SpendFragment extends Fragment {
 
             }
         });
+
+        //viewModel.getSelectedCategories(tid);
+//        viewModel.selectedCategory.observe(this, new Observer<List<String>>() {
+//            @Override
+//            public void onChanged(@Nullable List<String> strings) {
+//                viewModel.setSelectedSpends(tid, strings);
+//            }
+//        });
 
         return view;
     }
