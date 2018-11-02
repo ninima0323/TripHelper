@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,14 +86,21 @@ public class SpendFragment extends Fragment {
 
                 fabAdapter = new FabAdapter(context,categoryMS, viewModel, tid);
                 rvFab.setAdapter(fabAdapter);
-                List<String> list = new ArrayList<>();
+                List<String> clist = new ArrayList<>();
+                List<Spend> slist = new ArrayList<>();
                 int i;
                 for(i=0; i<categoryMS.size();i++){
                     if(categoryMS.get(i).isSelected()){
-                        list.add(categoryMS.get(i).getCategory());
+                        clist.add(categoryMS.get(i).getCategory());
                     }
                 }
-                viewModel.setSelectedSpends(tid, list);
+                for(i=0; i<spendList.size(); i++){
+                    if(clist.contains(spendList.get(i).getCategory())){
+                        slist.add(spendList.get(i));
+                    }
+                }
+                mAdapter.spendList = slist;
+                mAdapter.notifyDataSetChanged();
             }
         });
         rvFab.bringToFront();
