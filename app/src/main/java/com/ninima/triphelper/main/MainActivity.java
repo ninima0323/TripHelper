@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     TripAdapter mAdapter;
     RecyclerView rv;
-    List<Trip> tripList ;
+//    List<Trip> tripList ;
 
     Bitmap bitmap;
     ImageView backImg;
@@ -93,33 +93,12 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<Trip> trips) {
                 //여기서 trips를 갱신해줘야지
                 //trips가 갱신된 리스트야 ㅋ댑터에 넣고
-                tripList = trips;
+                //tripList = trips;
                 mAdapter.tripList=trips;
                 mAdapter.notifyDataSetChanged();
             }
         });
 
-//        //뷰모델에 만들어 놓은 LiveData 를 observe(구독, 관찰?)함
-//        //디비에 정보가 바뀔 때 마다 onChanged 호출
-//        viewModel.trip.observe(this, new Observer<Trip>() {
-//            @Override
-//            public void onChanged(@Nullable Trip trip) {
-//                //내부는 UI 쓰레드라서 ui 건드려도 상관없음(정확히 말하면 ui 작업하라고 있는거)
-//                String result = "no result";
-//                if(trip != null) {
-//                    result = trip.getRegisterTime()+"";
-//                }
-//                textView.setText(result);
-//            }
-//        });
-//
-//        (findViewById(R.id.test)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //백그라운드 쓰레드 호출은 뷰모델에 맡기고 밖에서는 호출만(코드 여기저기서 쓰레드만들면 보기 더러울거같아서)
-//                viewModel.insertNewTrip(new Trip());
-//            }
-//        });
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -142,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         rv = (RecyclerView)findViewById(R.id.main_rv);
-        mAdapter = new TripAdapter(this, tripList, new ItemDeleteListener() {
+        mAdapter = new TripAdapter(this, new ItemDeleteListener() {
             @Override
             public void onItemClick(Trip trip) {
                 viewModel.deleteTrip(trip);

@@ -33,9 +33,8 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     MyDatabase database = MyDatabase.instance();
     //TripDao tripDao =  database.tripDao();
     SpendDao spendDao = database.spendDao();
-    public TripAdapter(Context context, List<Trip> tripList, ItemDeleteListener listener){
+    public TripAdapter(Context context, ItemDeleteListener listener){
         this.context = context;
-        this.tripList = tripList;
         this.listener = listener;
     }
 
@@ -70,7 +69,7 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final Trip trip = tripList.get(position);
         ((TripHolder)holder).bind(trip);
         final int pos = position;
-
+     //   Log.e("date", ""+trip.getStartDate().toString());
 //        spendDao.getPicList(trip.getRegisterTime()).observe((LifecycleOwner) context, new Observer<List<String>>() {
 //            @Override
 //            public void onChanged(@Nullable List<String> strings) {
@@ -84,6 +83,10 @@ public class TripAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(trip.getStartDate()==null){
             ((TripHolder) holder).binding.tv1Trip.setText("여행 날짜를 입력해주세요.");
             ((TripHolder) holder).binding.tv2Trip.setText(" ");
+        }else{
+
+            ((TripHolder) holder).binding.tv1Trip.setText("여행 기간 : ");
+            ((TripHolder) holder).binding.tv2Trip.setText(" ~ ");
         }
 
         //지출총액 확인은 어케??
