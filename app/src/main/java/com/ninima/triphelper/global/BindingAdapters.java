@@ -1,6 +1,7 @@
 package com.ninima.triphelper.global;
 
 import android.databinding.BindingAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -27,10 +28,18 @@ public class BindingAdapters {
     }
     @BindingAdapter("floattostring")
     public static void setFloat(TextView tv, Float f) {
-        if(f == null) tv.setHint(" ");
+        if(f.equals(0.0f)) tv.setHint("0.0");
         else{
             String d=Float.toString(f);
             tv.setText(d);
+        }
+    }
+    @BindingAdapter("floattostringET")
+    public static void setFloat(EditText et, Float f) {
+        if(f.equals(0.0f)) et.setHint("0.0");
+        else{
+            String d=Float.toString(f);
+            et.setText(d);
         }
     }
 }
