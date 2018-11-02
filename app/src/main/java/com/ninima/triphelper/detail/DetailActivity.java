@@ -193,9 +193,9 @@ public class DetailActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                binding.dateTv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                binding.dateTv.setText(year + "/" + (monthOfYear ) + "/" + dayOfMonth);
                                 c.set(Calendar.YEAR, year);
-                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.MONTH, monthOfYear);
                                 c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 trip.setStartDate(c.getTime());
                                 viewModel.updateTrip(trip);
@@ -220,9 +220,9 @@ public class DetailActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                binding.date2Tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                binding.date2Tv.setText(year + "/" + (monthOfYear ) + "/" + dayOfMonth);
                                 c.set(Calendar.YEAR, year);
-                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.MONTH, monthOfYear);
                                 c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 trip.setEndDate(c.getTime());
                                 viewModel.updateTrip(trip);
@@ -298,7 +298,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                if(trip.getStartDate()!=null) c.setTime(trip.getStartDate());
+                if(trip.getEndDate()!=null) c.setTime(trip.getEndDate());
                 int mYear = c.get(Calendar.YEAR); // current year
                 int mMonth = c.get(Calendar.MONTH); // current month
                 int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
@@ -310,11 +310,11 @@ public class DetailActivity extends AppCompatActivity {
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
                                 c.set(Calendar.YEAR, year);
-                                c.set(Calendar.MONTH, monthOfYear+1);
+                                c.set(Calendar.MONTH, monthOfYear);
                                 c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                trip.setStartDate(c.getTime());
+                                trip.setEndDate(c.getTime());
                                 viewModel.updateTrip(trip);
-                                binding.dateTv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                binding.date2Tv.setText(year + "/" + (monthOfYear ) + "/" + dayOfMonth);
                                 dateLayout.setVisibility(View.VISIBLE);
                                 dateNotice.setText("");
                             }
@@ -322,7 +322,7 @@ public class DetailActivity extends AppCompatActivity {
                 datePickerDialog.show();
 
                 final Calendar cal = Calendar.getInstance();
-                if(trip.getEndDate()!=null) cal.setTime(trip.getEndDate());
+                if(trip.getStartDate()!=null) cal.setTime(trip.getStartDate());
                 int nYear = cal.get(Calendar.YEAR); // current year
                 int nMonth = cal.get(Calendar.MONTH); // current month
                 int nDay = cal.get(Calendar.DAY_OF_MONTH); // current day
@@ -333,11 +333,11 @@ public class DetailActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 cal.set(Calendar.YEAR, year);
-                                cal.set(Calendar.MONTH, monthOfYear+1);
+                                cal.set(Calendar.MONTH, monthOfYear);
                                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                trip.setEndDate(cal.getTime());
+                                trip.setStartDate(cal.getTime());
                                 viewModel.updateTrip(trip);
-                                binding.date2Tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                                binding.dateTv.setText(year + "/" + (monthOfYear ) + "/" + dayOfMonth);
                                 dateLayout.setVisibility(View.VISIBLE);
                                 dateNotice.setText("");
                             }
