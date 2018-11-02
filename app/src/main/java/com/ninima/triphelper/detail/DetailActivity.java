@@ -368,8 +368,13 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if(trip.getStartDate()==null){
-            dateLayout.setVisibility(View.INVISIBLE);
-            dateNotice.setText("여행 기간을 입력해 주세요.");
+            if(!binding.dateTv.getText().equals(" ")){
+                dateLayout.setVisibility(View.VISIBLE);
+                dateNotice.setText("");
+            }else {
+                dateLayout.setVisibility(View.INVISIBLE);
+                dateNotice.setText("여행 기간을 입력해 주세요.");
+            }
         }else{
             dateLayout.setVisibility(View.VISIBLE);
             dateNotice.setText("");

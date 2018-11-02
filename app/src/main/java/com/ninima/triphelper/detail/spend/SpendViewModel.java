@@ -14,6 +14,7 @@ import com.ninima.triphelper.global.MyDatabase;
 import com.ninima.triphelper.model.CategoryM;
 import com.ninima.triphelper.model.Spend;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpendViewModel extends ViewModel {
@@ -27,12 +28,14 @@ public class SpendViewModel extends ViewModel {
     LiveData<List<CurrencyM>> currencies;
     LiveData<List<Spend>> spendList;
     LiveData<Spend> spend;
+    LiveData<List<String>> selectedCategory;
 
     public SpendViewModel(long tid){
         this.tid = tid;
         spendList = spendDao.getAllSpend(tid);
         this.currencies = currencyDao.getAllCurrency(tid);
         this.categoris = categoryDao.getAllCategory(tid);
+        selectedCategory = categoryDao.getSelectedCategories(tid);
     }
 
     public SpendViewModel(int sid, long tid){
@@ -88,15 +91,23 @@ public class SpendViewModel extends ViewModel {
         });
     }
 
-//    void getCategories(final long tid){
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                categories = tripDao.getCategories(tid);
-//                //옵저버에서 컨버터 사용해 맵으로 고치자
-//            }
-//        });
-//    }
+    void getSelectedCategories(final long tid){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                selectedCategory = categoryDao.getSelectedCategories(tid);
+            }
+        });
+    }
+
+    void setSelectedSpends(final long tid, final List<String> slist){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                spendList = spendDao.getSelectedSpend(tid, slist);
+            }
+        });
+    }
 
 
     static class SpendViewModelFactory extends ViewModelProvider.NewInstanceFactory {

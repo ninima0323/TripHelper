@@ -87,11 +87,13 @@ public class MainActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this)
                 .get(MainViewModel.class);
 
+
         viewModel.tripList.observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(@Nullable List<Trip> trips) {
                 //여기서 trips를 갱신해줘야지
                 //trips가 갱신된 리스트야 ㅋ댑터에 넣고
+                tripList = trips;
                 mAdapter.tripList=trips;
                 mAdapter.notifyDataSetChanged();
             }
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         }
         changeBarColor();
 
+
         rv = (RecyclerView)findViewById(R.id.main_rv);
         mAdapter = new TripAdapter(this, tripList, new ItemDeleteListener() {
             @Override
@@ -180,12 +183,6 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-//                dialog.setNeutralButton("취소", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
                 dialog.setNegativeButton("사진 촬영", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -227,10 +224,6 @@ public class MainActivity extends AppCompatActivity {
                         viewModel.insertNewCurrency(c);
                         viewModel.insertNewTrip(t);
                         dialog.dismiss();
-//                        Intent addintent = new Intent(context, DetailActivity.class);
-//                        addintent.putExtra("trip_title", t.getTitle());
-//                        addintent.putExtra("tid",t.getRegisterTime());
-//                        startActivity(addintent);
                     }
                 });
                 builder.setNegativeButton("no",new DialogInterface.OnClickListener() {

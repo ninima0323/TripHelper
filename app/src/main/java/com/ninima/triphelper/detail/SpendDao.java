@@ -9,6 +9,7 @@ import android.arch.persistence.room.Update;
 
 import com.ninima.triphelper.model.Spend;
 
+import java.security.SecurityPermission;
 import java.util.List;
 
 @Dao
@@ -26,11 +27,12 @@ public interface SpendDao {
     LiveData<List<Spend>> getAllSpend(long tid);
 
     @Query("SELECT * FROM Spend WHERE tripId = :tid and category in (:categoryList) ORDER BY registerDate DESC")
-    LiveData<List<Spend>> getSomeSpend(long tid, List<String> categoryList);
+    LiveData<List<Spend>> getSelectedSpend(long tid, List<String> categoryList);
 
     @Query("SELECT * FROM Spend WHERE sid = :sid")
     LiveData<Spend> getOneSpend(int sid);
 
     @Query("SELECT picUri FROM Spend WHERE tripId = :tid AND picUri != null ORDER BY registerDate DESC LIMIT 10")
     LiveData<List<String>> getPicList(long tid);
+
 }

@@ -12,7 +12,6 @@
         />
     <CheckBox
         android:id="@+id/fab_checkbox"
-        android:checked="true"
         android:layout_width="30dp"
         android:layout_height="30dp" />
 

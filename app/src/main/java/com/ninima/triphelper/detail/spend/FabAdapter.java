@@ -1,8 +1,12 @@
 package com.ninima.triphelper.detail.spend;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +55,10 @@ public class FabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
         final CategoryM cate = categories.get(position);
 
+        if(cate.isSelected()){
+            ((ViewHolder)viewHolder).cb.setChecked(true);
+        }
+
         final CategoryM c = new CategoryM();
         c.setCategoryId(cate.getCategoryId());
         c.setTid(tid);
@@ -61,11 +69,29 @@ public class FabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    c.setSelected(true);
-                    //viewModel.updateCategory(c);
+                    if(cate.isSelected()!=isChecked){
+                        c.setSelected(true);
+                        viewModel.updateCategory(c);
+//                        viewModel.getSelectedCategories(tid);
+//                        viewModel.selectedCategory.observe((LifecycleOwner) context, new Observer<List<String>>() {
+//                            @Override
+//                            public void onChanged(@Nullable List<String> strings) {
+//                                viewModel.setSelectedSpends(tid, strings);
+//                            }
+//                        });
+                    }
                 }else{
-                    c.setSelected(false);
-                    //viewModel.updateCategory(c);
+                    if(cate.isSelected()!=isChecked){
+                        c.setSelected(false);
+                        viewModel.updateCategory(c);
+//                        viewModel.getSelectedCategories(tid);
+//                        viewModel.selectedCategory.observe((LifecycleOwner) context, new Observer<List<String>>() {
+//                            @Override
+//                            public void onChanged(@Nullable List<String> strings) {
+//                                viewModel.setSelectedSpends(tid, strings);
+//                            }
+//                        });
+                    }
                 }
             }
         });

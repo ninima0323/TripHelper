@@ -28,4 +28,7 @@ public interface CategoryDao {
     @Query("SELECT * FROM CategoryM WHERE categoryId = :id")
     LiveData<CategoryM > getOneCategory(int id);
 
+    @Query("SELECT category FROM CategoryM WHERE tid = :tid AND isSelected = 'true' ORDER BY category")
+    LiveData<List<String>> getSelectedCategories(long tid);
+
 }
