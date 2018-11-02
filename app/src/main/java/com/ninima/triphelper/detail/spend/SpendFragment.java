@@ -94,13 +94,15 @@ public class SpendFragment extends Fragment {
                         clist.add(categoryMS.get(i).getCategory());
                     }
                 }
-                for(i=0; i<spendList.size(); i++){
-                    if(clist.contains(spendList.get(i).getCategory())){
-                        slist.add(spendList.get(i));
+                if(spendList!=null){
+                    for(i=0; i<spendList.size(); i++){
+                        if(clist.contains(spendList.get(i).getCategory())){
+                            slist.add(spendList.get(i));
+                        }
                     }
+                    mAdapter.spendList = slist;
+                    mAdapter.notifyDataSetChanged();
                 }
-                mAdapter.spendList = slist;
-                mAdapter.notifyDataSetChanged();
             }
         });
         rvFab.bringToFront();

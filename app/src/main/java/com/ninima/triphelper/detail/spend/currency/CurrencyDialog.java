@@ -108,17 +108,22 @@ public class CurrencyDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 if(istag && isprice){
-                    if(edit){
-                        c.setTag(tag.getText().toString());
-                        c.setPrice(Float.parseFloat(price.getText().toString()));
-                        finalViewModel.updateCurrency(c);
+                    if(tag.getText().toString().equals("₩") || tag.getText().toString().equals("WON")){
+                        Toast.makeText(context, "원화로는 추가, 수정이 불가능합니다.", Toast.LENGTH_SHORT).show();
                     }else{
-                        c.setTid(tid);
-                        c.setTag(tag.getText().toString());
-                        c.setPrice(Float.parseFloat(price.getText().toString()));
-                        finalViewModel.insertNewCurrency(c);
+                        if(edit){
+                            c.setTag(tag.getText().toString());
+                            c.setPrice(Float.parseFloat(price.getText().toString()));
+                            finalViewModel.updateCurrency(c);
+                            dismiss();
+                        }else{
+                            c.setTid(tid);
+                            c.setTag(tag.getText().toString());
+                            c.setPrice(Float.parseFloat(price.getText().toString()));
+                            finalViewModel.insertNewCurrency(c);
+                            dismiss();
+                        }
                     }
-                    dismiss();
                 }else{
                     if(edit){
                         Toast.makeText(context, "모든 항목을 입력하지 않아 수정되지 않습니다.", Toast.LENGTH_SHORT).show();

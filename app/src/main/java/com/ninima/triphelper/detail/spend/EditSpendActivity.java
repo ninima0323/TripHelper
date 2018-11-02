@@ -431,11 +431,11 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 if(TextUtils.isEmpty(detailM)) spend.setDetail(detailM);
 
                 if(!update){
-                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
+                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
                             || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
-                        if(!categoriesList.contains(category)){
+                        if(!categoriesList.contains(category) && !category.equals("직접 추가")){
                             CategoryM categoryM = new CategoryM();
                             categoryM.setCategory(category);
                             categoryM.setTid(tripId);
@@ -447,11 +447,11 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                     }
 
                 }else{
-                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category)
+                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
                             || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
-                        if(!categoriesList.contains(category)){
+                        if(!categoriesList.contains(category) && !category.equals("직접 추가")){
                             CategoryM categoryM = new CategoryM();
                             categoryM.setCategoryId(categoryId);
                             categoryM.setCategory(category);
