@@ -65,11 +65,16 @@ public class SpendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if(TextUtils.isEmpty(spend.getRegisterDate().toString())){
             ((SpendHolder) holder).binding.timeTvSpend.setText("");
         }
-        if(TextUtils.isEmpty(spend.getPlace())){
+        if(TextUtils.isEmpty(spend.getPlace())) {
             ((SpendHolder) holder).binding.placeTvSpend.setText("");
+        }else{
+            ((SpendHolder) holder).binding.priceTvSpend.setText(spend.getPlace());
         }
         if(TextUtils.isEmpty(spend.getDetail())){
             ((SpendHolder) holder).binding.detailTvSpend.setVisibility(View.GONE);
+        }else{
+            ((SpendHolder) holder).binding.detailTvSpend.setVisibility(View.VISIBLE);
+            ((SpendHolder) holder).binding.detailTvSpend.setText(spend.getDetail());
         }
 
 

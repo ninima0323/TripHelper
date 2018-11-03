@@ -42,6 +42,8 @@ import com.ninima.triphelper.detail.spend.currency.CurrencyM;
 import com.ninima.triphelper.model.CategoryM;
 import com.ninima.triphelper.model.Spend;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -314,6 +316,13 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
 
         tripId = s.getTripId();
         registerDate = s.getRegisterDate();
+        Calendar c = Calendar.getInstance();
+        c.setTime(registerDate);
+        nYear = c.get(Calendar.YEAR); // current year
+        nMonth = c.get(Calendar.MONTH); // current month
+        nDay = c.get(Calendar.DAY_OF_MONTH); // current day
+        nHour = c.get(Calendar.HOUR_OF_DAY) ;//current hour
+        nMinute=c.get(Calendar.MINUTE);//current minute
         binding.priceEtEditSpend.setText(Float.toString(s.getPrice()));
         binding.titleEtEditSpend.setText(s.getTitle());
         binding.placeEtEditSpend.setText(s.getPlace());
@@ -357,7 +366,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 }
             }
             if(pos == list.size()){
-                Toast.makeText(context, "환율이 삭제되어 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
+                if(!list.contains(currencyS))
+                    Toast.makeText(context, "환율이 삭제되어 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
                 currencyS = "₩";
                 currencySpinner.setSelection(0);
             }
@@ -392,7 +402,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 }
             }
             if(pos == list.size()){
-                Toast.makeText(context, "삭제된 카테고리입니다.", Toast.LENGTH_SHORT).show();
+                if(!list.contains(category)&& !TextUtils.isEmpty(category))
+                    Toast.makeText(context, "삭제된 카테고리입니다.", Toast.LENGTH_SHORT).show();
                 category = "";
                 categorySpinner.setSelection(0);
             }
@@ -427,8 +438,10 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 spend.setCurrencyS(currencyS);
                 spend.setCategory(category);
                 if(registerDate != null) spend.setRegisterDate(registerDate);
-                if(TextUtils.isEmpty(place)) spend.setPlace(place);
-                if(TextUtils.isEmpty(detailM)) spend.setDetail(detailM);
+//                if(TextUtils.isEmpty(place)) spend.setPlace(place);
+//                if(TextUtils.isEmpty(detailM)) spend.setDetail(detailM);
+                spend.setPlace(place);
+                spend.setDetail(detailM);
 
                 if(!update){
                     if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
