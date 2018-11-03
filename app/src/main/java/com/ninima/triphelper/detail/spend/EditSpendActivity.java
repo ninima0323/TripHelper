@@ -366,7 +366,7 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 }
             }
             if(pos == list.size()){
-                if(!list.contains(currencyS))
+                if(!list.contains(currencyS) && !TextUtils.isEmpty(currencyS))
                     Toast.makeText(context, "환율이 삭제되어 원화로 기본설정됩니다.", Toast.LENGTH_SHORT).show();
                 currencyS = "₩";
                 currencySpinner.setSelection(0);
