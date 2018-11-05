@@ -124,6 +124,12 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
             mSecond = c.get(Calendar.SECOND);
             registerDate = c.getTime();
 
+            nYear = c.get(Calendar.YEAR); // current year
+            nMonth = c.get(Calendar.MONTH); // current month
+            nDay = c.get(Calendar.DAY_OF_MONTH); // current day
+            nHour = c.get(Calendar.HOUR_OF_DAY) ;//current hour
+            nMinute=c.get(Calendar.MINUTE);//current minute
+
             //mSpinner.setPrompt("통화 선택");
 
             viewModel.currencies.observe(this, new Observer<List<CurrencyM>>() {
@@ -429,12 +435,14 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 return true;
             case R.id.action_save:
                 title = binding.titleEtEditSpend.getText().toString();
-                price = Float.parseFloat(binding.priceEtEditSpend.getText().toString());
+                if(!TextUtils.isEmpty(binding.priceEtEditSpend.getText().toString())) {
+                    price = Float.parseFloat(binding.priceEtEditSpend.getText().toString());
+                    spend.setPrice(price);
+                }
                 place = binding.placeEtEditSpend.getText().toString();
                 detailM = binding.detailEtEditSpend.getText().toString();
                 spend.setTripId(tripId);
                 spend.setTitle(title);
-                spend.setPrice(price);
                 spend.setCurrencyS(currencyS);
                 spend.setCategory(category);
                 if(registerDate != null) spend.setRegisterDate(registerDate);
@@ -444,8 +452,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                 spend.setDetail(detailM);
 
                 if(!update){
-                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
-                            || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
+                    if(price ==null || TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
+                            || TextUtils.isEmpty(Float.toString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 저장되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
                         if(!categoriesList.contains(category) && !category.equals("직접 추가")){
@@ -460,8 +468,8 @@ public class EditSpendActivity extends AppCompatActivity implements  DatePickerD
                     }
 
                 }else{
-                    if(TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
-                            || TextUtils.isEmpty(Float.toHexString(price)) || TextUtils.isEmpty(currencyS)){
+                    if(price ==null || TextUtils.isEmpty(title) || TextUtils.isEmpty(category) || category.equals("직접 추가")
+                            || TextUtils.isEmpty(Float.toString(price)) || TextUtils.isEmpty(currencyS)){
                         Toast.makeText(this, "필수항목 미기입으로 지출 내역이 수정되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }else {
                         if(!categoriesList.contains(category) && !category.equals("직접 추가")){
